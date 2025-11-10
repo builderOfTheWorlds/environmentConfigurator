@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+*.egg-info/
+dist/
+build/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.backup
+*~
+
+# Sensitive data (don't commit passwords, tokens, etc.)
+*.key
+*.pem
+secrets/
+.env
+
+# Local machine-specific configs
+local/
