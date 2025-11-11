@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "Bash(mkdir:*)",
+      "Bash(git init:*)",
+      "Bash(git add:*)",
+      "Bash(git branch:*)",
+      "Bash(chmod:*)",
+      "Bash(git commit:*)",
+      "Bash(wsl.exe -l:*)",
+      "WebSearch",
+      "Bash(echo:*)",
+      "WebFetch(domain:code.claude.com)",
+      "Bash(crontab -l:*)",
+      "Bash(crontab:*)",
+      "Bash(python3:*)",
+      "Bash(ln:*)",
+      "Bash(readlink:*)",
+      "Bash(/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/claude_configs/manage_configs.sh:*)",
+      "Bash(tmux show-options:*)",
+      "Bash(tree:*)",
+      "Bash(tmux:*)",
+      "WebFetch(domain:superuser.com)",
+      "WebFetch(domain:github.com)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

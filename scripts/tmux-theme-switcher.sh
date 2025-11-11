@@ -17,8 +17,9 @@ echo "  3. Mint/Teal - Modern, lighter cyan-green"
 echo "  4. Emerald - Rich, vibrant green"
 echo "  5. Nord Aurora - Subtle green on dark background"
 echo "  6. Dracula Green - Purple background with green"
+echo "  7. Gemini - Blue and gray tones"
 echo ""
-read -p "Select a theme (1-6): " choice
+read -p "Select a theme (1-7): " choice
 
 case $choice in
     1)
@@ -99,6 +100,19 @@ case $choice in
         MESSAGE_FG="#282a36"
         ACTIVITY_COLOR="#50fa7b"
         ;;
+    7)
+        echo "Applying Gemini..."
+        THEME_NAME="Gemini"
+        BG_COLOR="#1f2229"
+        FG_COLOR="#e1e1e1"
+        ACCENT_COLOR="#4285f4"
+        BORDER_COLOR="#4a4a4a"
+        BORDER_ACTIVE="#4285f4"
+        INACTIVE_BG="#2d3037"
+        MESSAGE_BG="#4285f4"
+        MESSAGE_FG="#1f2229"
+        ACTIVITY_COLOR="#8ab4f8"
+        ;;
     *)
         echo "Invalid selection. Exiting."
         exit 1
@@ -108,68 +122,66 @@ esac
 # Backup current config
 cp "$TMUX_CONF" "$TMUX_CONF.backup"
 
+# Create a theme block
+THEME_BLOCK="
+# ========================================
+# Theme: $THEME_NAME
+# ========================================
+
+# Status bar colors
+set -g status-style bg=$BG_COLOR,fg=$FG_COLOR
+set -g status-left-style bg=$BG_COLOR,fg=$ACCENT_COLOR
+set -g status-right-style bg=$BG_COLOR,fg=$FG_COLOR
+
+# Pane border colors
+set -g pane-border-style fg=$BORDER_COLOR
+set -g pane-active-border-style fg=$BORDER_ACTIVE
+
+# Window status colors
+setw -g window-status-style fg=$FG_COLOR,bg=$BG_COLOR
+setw -g window-status-current-style fg=$BG_COLOR,bg=$ACCENT_COLOR,bold
+
+# Message colors
+set -g message-style bg=$MESSAGE_BG,fg=$MESSAGE_FG,bold
+set -g message-command-style bg=$MESSAGE_BG,fg=$MESSAGE_FG,bold
+
+# Activity color
+setw -g window-status-activity-style fg=$ACTIVITY_COLOR,bg=$BG_COLOR
+
+# ========================================
+"
+
 # Find the theme section and replace it
-sed -i '/^# ========================================$/,/^# ========================================$/ {
-    /^# Theme/,/^# ========================================$/ {
-        /^# Theme/ {
-            a\
-# ========================================\
-
-            a\
-\
-
-            a\
-# Status bar colors\
-
-            a\
-set -g status-style bg='"$BG_COLOR"',fg='"$FG_COLOR"'\
-
-            a\
-set -g status-left-style bg='"$BG_COLOR"',fg='"$ACCENT_COLOR"'\
-
-            a\
-set -g status-right-style bg='"$BG_COLOR"',fg='"$FG_COLOR"'\
-
-            a\
-\
-
-            a\
-# Pane border colors\
-
-            a\
-set -g pane-border-style fg='"$BORDER_COLOR"'\
-
-            a\
-set -g pane-active-border-style fg='"$BORDER_ACTIVE"'\
-
-            a\
-\
-
-            a\
-# Window status colors\
-
-            a\
-setw -g window-status-style fg='"$FG_COLOR"',bg='"$BG_COLOR"'\
-
-            a\
-setw -g window-status-current-style fg='"$BG_COLOR"',bg='"$ACCENT_COLOR"',bold\
-
-            a\
-\
-
-            a\
-# Message colors\
-
-            a\
-set -g message-style bg='"$MESSAGE_BG"',fg='"$MESSAGE_FG"',bold\
-
-            a\
-set -g message-command-style bg='"$MESSAGE_BG"',fg='"$MESSAGE_FG"',bold
-            d
-        }
-        d
+# This is a bit tricky with sed, so we'll use a temporary file
+TMP_FILE=$(mktemp)
+awk '
+  /^# ========================================$/ && /# Theme:/ {
+    if (!found) {
+      print "'"$THEME_BLOCK"'"
+      found = 1
+      p = 0
     }
-}' "$TMUX_CONF"
+    next
+  }
+  /^# ========================================$/ {
+    if (found && p == 0) {
+      p = 1
+    } else {
+      p = 0
+    }
+    next
+  }
+  !p {
+    print
+  }
+' "$TMUX_CONF" > "$TMP_FILE"
+
+# If the theme block was not found, append it
+if ! grep -q "# Theme:" "$TMP_FILE"; then
+    echo "$THEME_BLOCK" >> "$TMP_FILE"
+fi
+
+mv "$TMP_FILE" "$TMUX_CONF"
 
 # Also update the status-left to use the accent color
 sed -i "s|set -g status-left \"#\[fg=#[^,]*,bg=$ACCENT_COLOR,bold\]|set -g status-left \"#[fg=$BG_COLOR,bg=$ACCENT_COLOR,bold]|" "$TMUX_CONF"
