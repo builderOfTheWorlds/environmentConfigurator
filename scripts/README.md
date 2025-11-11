@@ -2,6 +2,26 @@
 
 A comprehensive theme management tool for tmux that also configures shell colors and terminal fonts.
 
+## 🆕 Two Versions Available!
+
+### 🐍 **Python Interactive TUI** (Recommended)
+**NEW!** Beautiful split-screen interface with live preview, 25+ themes, and arrow key navigation.
+
+```bash
+python3 ./tmux-theme-switcher.py
+```
+
+📖 **[Read the Python TUI Documentation](PYTHON_THEME_SWITCHER_README.md)**
+
+### 📜 **Bash Script** (Classic)
+Traditional text menu interface with 8 themes.
+
+```bash
+./tmux-theme-switcher.sh
+```
+
+---
+
 ## Features
 
 - **6 Green-themed Color Schemes** for tmux
