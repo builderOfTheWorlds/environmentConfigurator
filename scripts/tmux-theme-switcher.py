@@ -610,8 +610,8 @@ class ThemeSwitcher:
             if category != last_category:
                 if row < end_row:
                     self.stdscr.attron(curses.color_pair(4) | curses.A_BOLD)
-                    # Add extra space after category name for proper alignment
-                    category_text = f" {category} "
+                    # Add extra space after category name and pad to full width for alignment
+                    category_text = f" {category} ".ljust(width - 2)
                     self.stdscr.addstr(row, col, category_text)
                     self.stdscr.attroff(curses.color_pair(4) | curses.A_BOLD)
                     row += 1
