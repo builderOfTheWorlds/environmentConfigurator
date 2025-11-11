@@ -610,7 +610,9 @@ class ThemeSwitcher:
             if category != last_category:
                 if row < end_row:
                     self.stdscr.attron(curses.color_pair(4) | curses.A_BOLD)
-                    self.stdscr.addstr(row, col, f" {category}")
+                    # Add extra space after category name for proper alignment
+                    category_text = f" {category} "
+                    self.stdscr.addstr(row, col, category_text)
                     self.stdscr.attroff(curses.color_pair(4) | curses.A_BOLD)
                     row += 1
                     last_category = category
@@ -678,55 +680,178 @@ class ThemeSwitcher:
 
         row += 1
 
-        # Mock tmux status bar
+        # Mock tmux status bar with theme colors
         if row + 5 < end_row:
             self.stdscr.attron(curses.color_pair(5) | curses.A_BOLD)
             self.stdscr.addstr(row, col, "📊 Tmux Status Bar Preview:")
             self.stdscr.attroff(curses.color_pair(5) | curses.A_BOLD)
             row += 1
 
-            # Simple ASCII representation
-            self.stdscr.attron(curses.color_pair(3))
             bar_width = min(width - 4, 50)
+
+            # Show a colorful representation using the theme description
+            # Top border in border color style
+            self.stdscr.attron(curses.color_pair(3))
             self.stdscr.addstr(row, col, "┌" + "─" * bar_width + "┐")
+            self.stdscr.attroff(curses.color_pair(3))
             row += 1
 
-            status_left = f"[Session] "
-            status_right = f" {datetime.now().strftime('%H:%M')}"
-            status_middle = " 1:bash* 2:vim "
+            # Status bar content with color indicators
+            # Left part (accent color) - session name
+            status_left = "[Session]"
+            # Middle part (normal) - window list
+            status_middle = " 1:bash"
+            # Active window (accent/highlight)
+            status_active = "*"
+            # More windows
+            status_more = " 2:vim "
+            # Right part (normal) - time
+            status_right = datetime.now().strftime('%H:%M')
 
-            padding = bar_width - len(status_left) - len(status_right) - len(status_middle)
-            status_line = status_left + status_middle + " " * padding + status_right
+            # Calculate padding
+            used = len(status_left) + len(status_middle) + len(status_active) + len(status_more) + len(status_right) + 1
+            padding = max(0, bar_width - used)
 
-            self.stdscr.addstr(row, col, "│" + status_line[:bar_width] + "│")
+            # Draw the status line with visual color indicators
+            self.stdscr.attron(curses.color_pair(3))
+            self.stdscr.addstr(row, col, "│")
+            self.stdscr.attroff(curses.color_pair(3))
+
+            # Session in accent color
+            self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+            self.stdscr.addstr(status_left)
+            self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+
+            # Regular window
+            self.stdscr.attron(curses.color_pair(3))
+            self.stdscr.addstr(status_middle)
+            self.stdscr.attroff(curses.color_pair(3))
+
+            # Active window indicator (highlighted)
+            self.stdscr.attron(curses.color_pair(2) | curses.A_BOLD | curses.A_REVERSE)
+            self.stdscr.addstr(status_active)
+            self.stdscr.attroff(curses.color_pair(2) | curses.A_BOLD | curses.A_REVERSE)
+
+            # More windows
+            self.stdscr.attron(curses.color_pair(3))
+            self.stdscr.addstr(status_more)
+            # Padding
+            self.stdscr.addstr(" " * padding)
+            # Time
+            self.stdscr.addstr(status_right)
+            self.stdscr.addstr("│")
+            self.stdscr.attroff(curses.color_pair(3))
             row += 1
+
+            # Bottom border
+            self.stdscr.attron(curses.color_pair(3))
             self.stdscr.addstr(row, col, "└" + "─" * bar_width + "┘")
+            self.stdscr.attroff(curses.color_pair(3))
+            row += 1
+
+            # Add color legend
+            self.stdscr.attron(curses.color_pair(3))
+            legend = "  (Colors: "
+            self.stdscr.addstr(row, col, legend)
+            self.stdscr.attroff(curses.color_pair(3))
+
+            self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+            self.stdscr.addstr("accent")
+            self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+
+            self.stdscr.attron(curses.color_pair(3))
+            self.stdscr.addstr(", ")
+            self.stdscr.attroff(curses.color_pair(3))
+
+            self.stdscr.attron(curses.color_pair(2) | curses.A_REVERSE)
+            self.stdscr.addstr("active")
+            self.stdscr.attroff(curses.color_pair(2) | curses.A_REVERSE)
+
+            self.stdscr.attron(curses.color_pair(3))
+            self.stdscr.addstr(")")
             self.stdscr.attroff(curses.color_pair(3))
             row += 2
 
-        # Code sample preview
-        if row + 8 < end_row:
+        # Directory listing preview (eza -l -T --level 2 style)
+        if row + 10 < end_row:
             self.stdscr.attron(curses.color_pair(5) | curses.A_BOLD)
-            self.stdscr.addstr(row, col, "💻 Code Sample:")
+            self.stdscr.addstr(row, col, "📁 Directory Listing (eza -l -T --level 2):")
             self.stdscr.attroff(curses.color_pair(5) | curses.A_BOLD)
             row += 1
 
-            code_sample = [
-                "  def hello_world():",
-                "      print('Hello, World!')",
-                "      return True",
-                "",
-                "  # Function call",
-                "  result = hello_world()",
+            # Simulate directory tree with colored directories
+            listing = [
+                ("drwxr-xr-x  4 user group  4.0K  ", "projects", "/", True),
+                ("├──", "drwxr-xr-x  2 user group  4.0K  ", "frontend", "/", True),
+                ("│  ├──", "-rw-r--r--  1 user group  1.2K  ", "index.html", "", False),
+                ("│  └──", "-rw-r--r--  1 user group  3.4K  ", "style.css", "", False),
+                ("├──", "drwxr-xr-x  2 user group  4.0K  ", "backend", "/", True),
+                ("│  ├──", "-rw-r--r--  1 user group  5.6K  ", "server.py", "", False),
+                ("│  └──", "-rw-r--r--  1 user group   890  ", "config.json", "", False),
+                ("└──", "drwxr-xr-x  2 user group  4.0K  ", "docs", "/", True),
+                ("   ├──", "-rw-r--r--  1 user group  2.1K  ", "README.md", "", False),
+                ("   └──", "-rw-r--r--  1 user group  1.5K  ", "GUIDE.md", "", False),
             ]
 
-            self.stdscr.attron(curses.color_pair(3))
-            for line in code_sample:
+            for item in listing:
                 if row >= end_row:
                     break
-                self.stdscr.addstr(row, col, line[:width-2])
+
+                # Handle different tuple lengths
+                if len(item) == 5:
+                    tree, perms, name, suffix, is_dir = item
+                    self.stdscr.attron(curses.color_pair(3))
+                    self.stdscr.addstr(row, col, f"  {tree} ")
+                    self.stdscr.addstr(perms)
+                    self.stdscr.attroff(curses.color_pair(3))
+
+                    # Color the name based on whether it's a directory
+                    if is_dir:
+                        self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+                    else:
+                        self.stdscr.attron(curses.color_pair(3))
+
+                    self.stdscr.addstr(name + suffix)
+
+                    if is_dir:
+                        self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+                    else:
+                        self.stdscr.attroff(curses.color_pair(3))
+                else:
+                    # Simple line (header)
+                    perms, name, suffix, is_dir = item
+                    self.stdscr.attron(curses.color_pair(3))
+                    self.stdscr.addstr(row, col, f"  {perms}")
+                    self.stdscr.attroff(curses.color_pair(3))
+
+                    if is_dir:
+                        self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+                    else:
+                        self.stdscr.attron(curses.color_pair(3))
+
+                    self.stdscr.addstr(name + suffix)
+
+                    if is_dir:
+                        self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+                    else:
+                        self.stdscr.attroff(curses.color_pair(3))
+
                 row += 1
-            self.stdscr.attroff(curses.color_pair(3))
+
+            # Add color note
+            if row < end_row:
+                self.stdscr.attron(curses.color_pair(3))
+                note = f"  (Directories shown in "
+                self.stdscr.addstr(row, col, note)
+                self.stdscr.attroff(curses.color_pair(3))
+
+                self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+                self.stdscr.addstr("theme color")
+                self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+
+                self.stdscr.attron(curses.color_pair(3))
+                self.stdscr.addstr(")")
+                self.stdscr.attroff(curses.color_pair(3))
 
     def draw_footer(self):
         """Draw the footer with apply button"""
