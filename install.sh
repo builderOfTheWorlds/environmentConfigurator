@@ -19,12 +19,34 @@ NC='\033[0m' # No Color
 
 # Parse command line arguments
 TEST_MODE=false
-if [ "$1" = "--test" ]; then
-    TEST_MODE=true
-fi
+USE_PASSWORD=false
+for arg in "$@"; do
+    case $arg in
+        --test)
+            TEST_MODE=true
+            ;;
+        --use-password)
+            USE_PASSWORD=true
+            ;;
+        --help|-h)
+            echo "Usage: $0 [options]"
+            echo ""
+            echo "Options:"
+            echo "  --test           Run in test mode (dry run, no changes)"
+            echo "  --use-password   Use username/password auth instead of token (legacy)"
+            echo "  --help, -h       Show this help message"
+            echo ""
+            echo "Examples:"
+            echo "  $0                      # Normal install with token auth"
+            echo "  $0 --test               # Test mode"
+            echo "  $0 --use-password       # Use username/password auth"
+            exit 0
+            ;;
+    esac
+done
 
 # Configuration
-REPO_URL="https://github.com/YOURUSERNAME/YOURREPO.git"
+REPO_BASE_URL="https://github.com/builderOfTheWorlds/environmentConfigurator.git"
 INSTALL_DIR="$HOME/.environment-config"
 BACKUP_DIR="$HOME/.environment-config-backup-$(date +%Y%m%d-%H%M%S)"
 
@@ -59,11 +81,71 @@ print_error() {
     echo -e "${RED}[✗]${NC} $1"
 }
 
+# Get git credentials and build authenticated URL
+get_repo_url() {
+    local base_url="$REPO_BASE_URL"
+
+    # Extract components from URL
+    # Expected format: https://github.com/USERNAME/REPO.git
+    local url_without_protocol="${base_url#https://}"
+    local host_and_path="$url_without_protocol"
+
+    if [ "$TEST_MODE" = true ]; then
+        REPO_URL="$base_url"
+        return 0
+    fi
+
+    # Check if repo is public by attempting anonymous clone test
+    # If it's public, no auth needed
+    if git ls-remote "$base_url" HEAD &>/dev/null; then
+        print_status "Repository is public, no authentication needed"
+        REPO_URL="$base_url"
+        return 0
+    fi
+
+    # Private repo - need credentials
+    echo ""
+    echo -e "${YELLOW}Authentication required for private repository${NC}"
+    echo ""
+
+    if [ "$USE_PASSWORD" = true ]; then
+        # Legacy username/password authentication
+        echo -e "${YELLOW}Note: Username/password auth is deprecated on GitHub.${NC}"
+        echo -e "${YELLOW}Consider using a Personal Access Token instead.${NC}"
+        echo ""
+        read -p "GitHub Username: " gh_username
+        read -sp "GitHub Password: " gh_password
+        echo ""
+
+        REPO_URL="https://${gh_username}:${gh_password}@${host_and_path}"
+    else
+        # Token authentication (default)
+        echo "To create a Personal Access Token:"
+        echo "1. Go to: https://github.com/settings/tokens"
+        echo "2. Click 'Generate new token (classic)'"
+        echo "3. Select scope: 'repo' (full control)"
+        echo "4. Copy the generated token"
+        echo ""
+        read -sp "GitHub Personal Access Token: " gh_token
+        echo ""
+
+        if [ -z "$gh_token" ]; then
+            print_error "Token cannot be empty"
+            exit 1
+        fi
+
+        REPO_URL="https://${gh_token}@${host_and_path}"
+    fi
+}
+
 # Check if git is installed
 if ! command -v git &> /dev/null; then
     print_error "Git is not installed. Please install git first."
     exit 1
 fi
+
+# Get authenticated repository URL
+get_repo_url
 
 # Backup existing files
 backup_file() {
@@ -89,6 +171,11 @@ else
     if [ "$TEST_MODE" = false ]; then
         git clone "$REPO_URL" "$INSTALL_DIR"
         cd "$INSTALL_DIR"
+
+        # Configure git credential helper to cache token for future operations
+        # This ensures auto-updates and manual pulls work without re-entering credentials
+        git config credential.helper store
+        print_status "Git credential helper configured for future updates"
     fi
 fi
 
@@ -181,6 +268,52 @@ UPDATESCRIPT
 fi
 print_status "Created update-env-config command"
 
+# Install Oh-My-Zsh (optional)
+install_ohmyzsh() {
+    echo ""
+    echo -e "${BLUE}=============================================="
+    echo "Oh-My-Zsh Installation"
+    echo "==============================================\n${NC}"
+
+    # Check if zsh is installed
+    if ! command -v zsh &> /dev/null; then
+        echo "Zsh is not currently installed."
+    else
+        echo "Zsh is installed: $(zsh --version)"
+    fi
+
+    # Check if oh-my-zsh is already installed
+    if [ -d "$HOME/.oh-my-zsh" ]; then
+        print_status "Oh-My-Zsh is already installed"
+        return 0
+    fi
+
+    # Ask user if they want to install oh-my-zsh
+    echo ""
+    echo "Would you like to install Oh-My-Zsh?"
+    echo "This will install:"
+    echo "  - Zsh (if not installed)"
+    echo "  - Oh-My-Zsh framework"
+    echo "  - Useful plugins (git, docker, python, etc.)"
+    echo "  - zsh-autosuggestions & zsh-syntax-highlighting"
+    echo "  - Agnoster theme"
+    echo ""
+    read -p "Install Oh-My-Zsh? (y/N): " -n 1 -r
+    echo
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        if [ -f "$INSTALL_DIR/scripts/install-ohmyzsh.sh" ]; then
+            print_status "Running Oh-My-Zsh installer..."
+            bash "$INSTALL_DIR/scripts/install-ohmyzsh.sh"
+        else
+            print_warning "Oh-My-Zsh installer script not found at $INSTALL_DIR/scripts/install-ohmyzsh.sh"
+        fi
+    else
+        print_status "Skipping Oh-My-Zsh installation"
+        echo "You can install it later by running: $HOME/bin/zsh-setup install"
+    fi
+}
+
 echo ""
 if [ "$TEST_MODE" = true ]; then
     echo -e "${BLUE}=============================================="
@@ -190,6 +323,10 @@ if [ "$TEST_MODE" = true ]; then
     echo -e "${YELLOW}No changes were made to your system.${NC}"
     echo "Run without --test flag to perform actual installation."
 else
+    # Run Oh-My-Zsh installation
+    install_ohmyzsh
+
+    echo ""
     echo -e "${GREEN}=============================================="
     echo "Installation complete!"
     echo "=============================================="
@@ -197,6 +334,7 @@ else
     echo "Next steps:"
     echo "1. Restart your shell or run: source ~/.bashrc (or ~/.zshrc)"
     echo "2. Run 'update-env-config' anytime to pull latest changes"
+    echo "3. Manage Zsh with: zsh-setup [status|themes|plugins|edit]"
     echo ""
     if [ -d "$BACKUP_DIR" ]; then
         echo "Your old configuration files are backed up in:"
