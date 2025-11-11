@@ -173,6 +173,7 @@ case $choice in
         ACTIVITY_COLOR="#00ff00"
         DIR_COLOR="01;32"
         BAT_THEME="DarkNeon"
+        PS1_COLOR="\\[\\033[01;32m\\]"
         ;;
     2)
         echo "Applying Forest Green..."
@@ -188,6 +189,7 @@ case $choice in
         ACTIVITY_COLOR="#88aa77"
         DIR_COLOR="01;38;5;108"
         BAT_THEME="Nord"
+        PS1_COLOR="\\[\\033[38;5;108m\\]"
         ;;
     3)
         echo "Applying Mint/Teal..."
@@ -203,6 +205,7 @@ case $choice in
         ACTIVITY_COLOR="#58d9c0"
         DIR_COLOR="01;36"
         BAT_THEME="Monokai Extended"
+        PS1_COLOR="\\[\\033[01;36m\\]"
         ;;
     4)
         echo "Applying Emerald..."
@@ -218,6 +221,7 @@ case $choice in
         ACTIVITY_COLOR="#5de4a8"
         DIR_COLOR="01;38;5;79"
         BAT_THEME="Monokai Extended Bright"
+        PS1_COLOR="\\[\\033[38;5;79m\\]"
         ;;
     5)
         echo "Applying Nord Aurora..."
@@ -233,6 +237,7 @@ case $choice in
         ACTIVITY_COLOR="#88c0d0"
         DIR_COLOR="01;38;5;150"
         BAT_THEME="Nord"
+        PS1_COLOR="\\[\\033[38;5;150m\\]"
         ;;
     6)
         echo "Applying Dracula Green..."
@@ -248,6 +253,7 @@ case $choice in
         ACTIVITY_COLOR="#50fa7b"
         DIR_COLOR="01;38;5;84"
         BAT_THEME="Dracula"
+        PS1_COLOR="\\[\\033[38;5;84m\\]"
         ;;
     7)
         echo "Applying Purple Dream..."
@@ -263,6 +269,7 @@ case $choice in
         ACTIVITY_COLOR="#d896ff"
         DIR_COLOR="01;35"
         BAT_THEME="Dracula"
+        PS1_COLOR="\\[\\033[01;35m\\]"
         ;;
     8)
         echo "Applying Gemini..."
@@ -278,6 +285,7 @@ case $choice in
         ACTIVITY_COLOR="#8ab4f8"
         DIR_COLOR="01;34"
         BAT_THEME="OneHalfDark"
+        PS1_COLOR="\\[\\033[01;34m\\]"
         ;;
     *)
         echo "Invalid selection. Exiting."
@@ -371,16 +379,25 @@ cat >> "$SHELL_RC" << EOF
 # ========================================
 
 # EZA color configuration (for directory colors)
-export EZA_COLORS="di=$DIR_COLOR:ln=01;36:so=01;35:pi=40;33:ex=01;31:bd=40;33;01:cd=40;33;01:su=37;41:sg=30;43:tw=30;42:ow=34;42"
+export EZA_COLORS="di=$DIR_COLOR:ln=01;36:so=01;35:pi=40;33:ex=$DIR_COLOR:bd=40;33;01:cd=40;33;01:su=37;41:sg=30;43:tw=30;42:ow=$DIR_COLOR:uu=$DIR_COLOR:gu=$DIR_COLOR"
 
 # Traditional LS_COLORS (fallback for standard ls command)
-export LS_COLORS="di=$DIR_COLOR:ln=01;36:so=01;35:pi=40;33:ex=01;31:bd=40;33;01:cd=40;33;01:su=37;41:sg=30;43:tw=30;42:ow=34;42"
+export LS_COLORS="di=$DIR_COLOR:ln=01;36:so=01;35:pi=40;33:ex=$DIR_COLOR:bd=40;33;01:cd=40;33;01:su=37;41:sg=30;43:tw=30;42:ow=$DIR_COLOR"
 
 # Bat theme (syntax highlighting)
 export BAT_THEME="$BAT_THEME"
 
 # FZF colors (matching theme)
 export FZF_DEFAULT_OPTS="--color=fg:-1,bg:-1,hl:$DIR_COLOR,fg+:#ffffff,bg+:#3a3a3a,hl+:$DIR_COLOR --color=info:$DIR_COLOR,prompt:$DIR_COLOR,pointer:$DIR_COLOR,marker:$DIR_COLOR,spinner:$DIR_COLOR"
+
+# PS1 Configuration
+export PS1="${PS1_COLOR}\u\[\033[00m\]@\h:\[\033[01;34m\]\w\[\033[00m\]\$ "
+
+# Alias ll to eza -l
+alias ll='eza -l'
+
+# Alias llt to eza -l -T --level 2 -a
+alias llt='eza -l -T --level 2 -a'
 
 # ======================================== END TMUX THEME COLORS
 EOF
