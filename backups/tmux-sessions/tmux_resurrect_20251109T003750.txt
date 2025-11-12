@@ -1,0 +1,28 @@
+pane	ashiorid_ai_manager	1	0	:-	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	tilt	:tilt up
+pane	ashiorid_ai_manager	2	0	:	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	3	0	:	0	✳ Tmux Mouse Scrolling	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	4	0	:	0	✳ LLM-Proxy Module Error	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	5	0	:	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	6	1	:*	0	✳ PyCharm Setup	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	claude	:claude
+pane	backupUtil_2020	0	1	:*	0	✳ PyCharm file highlighting	:/mnt/c/Users/matt/PycharmProjects/ashiorid/backupUtil_2020	1	claude	:claude
+pane	contextXmlMerger	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/contextXmlMerger	1	bash	:
+pane	denon_avr_x2300w_webGUI	0	1	:*	0	✳ Installer Script Error	:/mnt/c/Users/matt/PycharmProjects/denon_avr_x2300w_webGUI	1	bash	:
+pane	denon_avr_x2300w_webGUI	1	0	:-	0	D2000	:/mnt/c/Users/matt/PycharmProjects/denon_avr_x2300w_webGUI/kubernetes	1	bash	:
+pane	ifmAiAnalyzer	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer	1	bash	:
+pane	sugartalking	0	1	:*	0	✳ HTTP Error 400	:/mnt/c/Users/matt/PycharmProjects/sugartalking/kubernetes	1	bash	:
+pane	sugartalking	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/sugartalking	0	sudo	:sudo su
+pane	sugartalking	1	0	:-	0	D2000	:/mnt/c/Users/matt/PycharmProjects/sugartalking	1	bash	:
+window	ashiorid_ai_manager	1	:tilt	0	:-	c47f,161x46,0,0,2	off
+window	ashiorid_ai_manager	2	:bash	0	:	c580,167x36,0,0,3	:
+window	ashiorid_ai_manager	3	:bash	0	:	c581,167x36,0,0,4	:
+window	ashiorid_ai_manager	4	:bash	0	:	b2e2,85x33,0,0,5	:
+window	ashiorid_ai_manager	5	:bash	0	:	b2e3,85x33,0,0,6	:
+window	ashiorid_ai_manager	6	:claude	1	:*	c486,161x46,0,0,9	:
+window	backupUtil_2020	0	:claude	1	:*	58c4,418x31,0,0,15	:
+window	contextXmlMerger	0	:bash	1	:*	c584,167x36,0,0,7	:
+window	denon_avr_x2300w_webGUI	0	:Claude	1	:*	5ccf,134x43,0,0,10	off
+window	denon_avr_x2300w_webGUI	1	:bash	0	:-	5dd0,134x72,0,0,11	:
+window	ifmAiAnalyzer	0	:bash	1	:*	c585,167x36,0,0,8	:
+window	sugartalking	0	:bash	1	:*	2af8,139x72,0,0[139x41,0,0,12,139x30,0,42,14]	:
+window	sugartalking	1	:bash	0	:-	5f12,139x72,0,0,13	:
+state	sugartalking	

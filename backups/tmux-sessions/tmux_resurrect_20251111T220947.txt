@@ -1,0 +1,10 @@
+pane	autoUpgrader	0	1	:*	1	✳ Settings Reset Issue	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	claude	:claude
+pane	environmentConfigurator	0	0	:##	1	✳ Shell Config Error	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	1	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	0	zsh	:
+pane	environmentConfigurator	1	0	:-	2	✳ Tmux Sessions Lost	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	2	1	:*	1	✳ Session Backup Setup	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	claude	:claude
+window	autoUpgrader	0	:claude	1	:*	bb5d,253x72,0,0,0	:
+window	environmentConfigurator	0	:zsh	0	:##	d25e,274x49,0,0,1	:
+window	environmentConfigurator	1	:zsh	0	:-	bf1b,274x49,0,0{138x49,0,0,2,135x49,139,0,3}	:
+window	environmentConfigurator	2	:claude	1	:*	d461,274x59,0,0,4	:
+state	environmentConfigurator	

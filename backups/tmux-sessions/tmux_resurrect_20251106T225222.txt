@@ -1,0 +1,10 @@
+pane	0	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer/ifmAnalyzerManager	1	bash	:
+pane	2	0	1	:*	0	D2000	:/home/matt	1	bash	:
+pane	ashiorid_ai_manager	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects	0	bash	:
+pane	ashiorid_ai_manager	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	1	0	:-	0	D2000	:/mnt/c/Windows/system32	1	bash	:
+window	0	0	:bash	1	:*	c11e,418x35,0,0,1	:
+window	2	0	:bash	1	:*	c11f,418x35,0,0,2	:
+window	ashiorid_ai_manager	0	:bash	1	:*	ce7b,418x37,0,0{221x37,0,0,3,196x37,222,0,4}	:
+window	ashiorid_ai_manager	1	:bash	0	:-	c122,418x35,0,0,5	:
+state	ashiorid_ai_manager	

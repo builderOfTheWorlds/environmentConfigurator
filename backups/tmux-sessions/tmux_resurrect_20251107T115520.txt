@@ -1,0 +1,17 @@
+pane	ashiorid_ai_manager	0	1	:*	0	✳ PyCharm Git Push	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	claude	:claude
+pane	ashiorid_ai_manager	1	0	:-	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	tilt	:tilt up
+pane	ashiorid_ai_manager	2	0	:	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	3	0	:	0	✳ Tmux Mouse Scrolling	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	4	0	:	0	✳ LLM-Proxy Module Error	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	claude	:claude
+pane	ashiorid_ai_manager	5	0	:	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	claude	:claude
+pane	contextXmlMerger	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/contextXmlMerger	1	bash	:
+pane	ifmAiAnalyzer	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer	1	bash	:
+window	ashiorid_ai_manager	0	:claude	1	:*	b27e,165x41,0,0,1	off
+window	ashiorid_ai_manager	1	:tilt	0	:-	d280,165x49,0,0,3	off
+window	ashiorid_ai_manager	2	:bash	0	:	c483,165x36,0,0,6	:
+window	ashiorid_ai_manager	3	:bash	0	:	b9e4,231x72,0,0,7	:
+window	ashiorid_ai_manager	4	:claude	0	:	b9e5,231x72,0,0,8	:
+window	ashiorid_ai_manager	5	:claude	0	:	b9e6,231x72,0,0,9	:
+window	contextXmlMerger	0	:bash	1	:*	bd01,147x72,0,0,4	:
+window	ifmAiAnalyzer	0	:bash	1	:*	bd02,147x72,0,0,5	:
+state	ashiorid_ai_manager	contextXmlMerger

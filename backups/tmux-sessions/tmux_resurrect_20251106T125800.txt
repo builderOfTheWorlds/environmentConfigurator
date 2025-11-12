@@ -1,0 +1,7 @@
+pane	0	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer/ifmAnalyzerManager	1	sudo	:sudo su
+pane	2	0	1	:*	0	D2000	:/home/matt	1	bash	:
+pane	5	0	1	:*	0	D2000	:/mnt/c/Windows/system32	1	bash	:
+window	0	0	:sudo	1	:*	b57d,182x61,0,0,0	:
+window	2	0	:bash	1	:*	caff,120x29,0,0,2	:
+window	5	0	:bash	1	:*	cb02,120x29,0,0,5	:
+state	5	

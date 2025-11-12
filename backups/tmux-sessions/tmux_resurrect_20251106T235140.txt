@@ -1,0 +1,8 @@
+pane	ashiorid_ai_manager	0	1	:*	0	✳ Debug Mode	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	emacs	:/snap/emacs/3261/usr/bin/emacs /home/matt/.bashrc
+pane	ashiorid_ai_manager	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	0	sudo	:sudo su
+pane	contextXmlMerger	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/contextXmlMerger	1	bash	:
+pane	ifmAiAnalyzer	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer	1	bash	:
+window	ashiorid_ai_manager	0	:claude	1	:*	a2a7,147x72,0,0[147x36,0,0,9,147x35,0,37,10]	off
+window	contextXmlMerger	0	:bash	1	:*	b124,418x31,0,0,7	:
+window	ifmAiAnalyzer	0	:bash	1	:*	b125,418x31,0,0,8	:
+state	ashiorid_ai_manager	

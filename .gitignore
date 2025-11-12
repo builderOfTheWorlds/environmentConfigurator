@@ -15,6 +15,7 @@ build/
 .vscode/
 *.swp
 *.swo
+
 *~
 
 # OS
@@ -35,4 +36,4 @@ secrets/
 local/
 
 /bin/
-/backups/tmux-sessions/
+

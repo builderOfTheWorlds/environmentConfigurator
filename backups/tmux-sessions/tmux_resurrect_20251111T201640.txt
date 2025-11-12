@@ -1,0 +1,91 @@
+pane	10	1	1	:*	1	✳ Copy Selection Issue	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	zsh	:
+pane	10	2	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	zsh	:
+pane	9	1	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	zsh	:
+pane	ashiorid_ai_manager	1	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	zsh	:
+pane	ashiorid_ai_manager	2	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	zsh	:
+pane	ashiorid_ai_manager	3	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	zsh	:
+pane	ashiorid_ai_manager	4	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	zsh	:
+pane	ashiorid_ai_manager	5	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	zsh	:
+pane	ashiorid_ai_manager	6	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	zsh	:
+pane	autoUpgrader	0	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	zsh	:
+pane	autoUpgrader	1	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	zsh	:
+pane	autoUpgrader	1	1	:*	2	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	0	zsh	:
+pane	autoUpgrader	1	1	:*	3	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	0	zsh	:
+pane	backupUtil_2020	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/backupUtil_2020	1	zsh	:
+pane	contextXmlMerger	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/contextXmlMerger	1	zsh	:
+pane	contextXmlMerger	0	1	:*	2	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/contextXmlMerger	0	zsh	:
+pane	denon_avr_x2300w_webGUI	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/denon_avr_x2300w_webGUI	1	zsh	:
+pane	denon_avr_x2300w_webGUI	1	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/denon_avr_x2300w_webGUI/kubernetes	1	zsh	:
+pane	environmentConfigurator	1	0	:	1	✳ Test Flag Development	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	0	zsh	:
+pane	environmentConfigurator	1	0	:	2	✳ Shell Type Check	:/home/matt/.claude	0	zsh	:
+pane	environmentConfigurator	1	0	:	3	D2000	:/home/matt	0	zsh	:
+pane	environmentConfigurator	1	0	:	4	D2000	:/home/matt	1	zsh	:
+pane	environmentConfigurator	2	0	:	1	✳ Config Reorganization	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	3	0	:	1	✳ Claude configs search	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	4	0	:	1	✳ Tmux Sessions Persistence	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	4	0	:	2	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	0	zsh	:
+pane	environmentConfigurator	5	0	:##	1	Gemini - environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	5	0	:##	2	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	0	zsh	:
+pane	environmentConfigurator	6	0	:	1	Gemini - environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	7	0	:##	1	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	zsh	:
+pane	environmentConfigurator	8	0	:	1	✳ Manual Push	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	9	0	:##	1	✳ Default Shell Configuration	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	10	0	:##	1	✳ API Rate Limiting Storage	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	11	0	:	1	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	zsh	:
+pane	environmentConfigurator	12	0	:	1	✳ Setup zsh installer	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	13	0	:##	1	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	14	0	:##	1	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	15	0	:##	1	Gemini - environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	node	:node /home/matt/.nvm/versions/node/v20.19.5/bin/gemini
+pane	environmentConfigurator	16	0	:##!	1	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	17	0	:##-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	zsh	:
+pane	environmentConfigurator	18	1	:*	1	✳ eza colors theme	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	claude	:claude
+pane	environmentConfigurator	18	1	:*	2	D2000	:/	0	zsh	:
+pane	firefoxHomeScreen-extension	1	1	:*	1	✳ Repository Format Error	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	zsh	:
+pane	firefoxHomeScreen-extension	1	1	:*	2	✳ Panel Divider Styling	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	0	zsh	:
+pane	firefoxHomeScreen-extension	2	0	:##-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	zsh	:
+pane	firefoxHomeScreen-extension	3	0	:##	1	D2000	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	zsh	:
+pane	ifmAiAnalyzer	0	1	:##*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer	1	zsh	:
+pane	ifmUpgrader	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmUpgrader	1	zsh	:
+pane	sugartalking	0	1	:##*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/sugartalking	1	zsh	:
+pane	sugartalking	1	0	:##-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/sugartalking	1	zsh	:
+window	10	1	:zsh	1	:*	bb5e,253x72,0,0,1	:
+window	10	2	:zsh	0	:-	bb5f,253x72,0,0,2	:
+window	9	1	:zsh	1	:*	bb60,253x72,0,0,3	:
+window	ashiorid_ai_manager	1	:tilt	0	:-	bb61,253x72,0,0,4	off
+window	ashiorid_ai_manager	2	:zsh	0	:	bb62,253x72,0,0,5	:
+window	ashiorid_ai_manager	3	:zsh	0	:	bb63,253x72,0,0,6	:
+window	ashiorid_ai_manager	4	:zsh	0	:	bb64,253x72,0,0,7	:
+window	ashiorid_ai_manager	5	:zsh	0	:	bb65,253x72,0,0,8	:
+window	ashiorid_ai_manager	6	:zsh	1	:*	bb66,253x72,0,0,9	:
+window	autoUpgrader	0	:zsh	0	:-	5ddf,253x72,0,0,10	:
+window	autoUpgrader	1	:zsh	1	:*	60f8,253x72,0,0[253x47,0,0{126x47,0,0,11,126x47,127,0,12},253x24,0,48,13]	:
+window	backupUtil_2020	0	:zsh	1	:*	5de3,253x72,0,0,14	:
+window	contextXmlMerger	0	:zsh	1	:*	8e17,253x72,0,0[253x1,0,0,15,253x70,0,2,16]	:
+window	denon_avr_x2300w_webGUI	0	:Claude	1	:*	5de6,253x72,0,0,17	off
+window	denon_avr_x2300w_webGUI	1	:zsh	0	:-	5de7,253x72,0,0,18	:
+window	environmentConfigurator	1	:zsh	0	:	2c9f,253x72,0,0[253x1,0,0,19,253x70,0,2{139x70,0,2,20,57x70,140,2,22,55x70,198,2,24}]	:
+window	environmentConfigurator	2	:zsh	0	:	dde5,253x72,0,0,26	:
+window	environmentConfigurator	3	:zsh	0	:	dde7,253x72,0,0,28	:
+window	environmentConfigurator	4	:zsh	0	:	178a,253x72,0,0{128x72,0,0,29,124x72,129,0,31}	:
+window	environmentConfigurator	5	:Gemini	0	:##	4f59,253x72,0,0{126x72,0,0,33,126x72,127,0,35}	off
+window	environmentConfigurator	6	:zsh	0	:	5de8,253x72,0,0,38	:
+window	environmentConfigurator	7	:zsh	0	:##	ead0,199x49,0,0,40	:
+window	environmentConfigurator	8	:zsh	0	:	dde2,253x72,0,0,42	:
+window	environmentConfigurator	9	:zsh	0	:##	dde4,253x72,0,0,44	:
+window	environmentConfigurator	10	:zsh	0	:##	dde6,253x72,0,0,46	:
+window	environmentConfigurator	11	:zsh	0	:	dde9,253x72,0,0,49	:
+window	environmentConfigurator	12	:zsh	0	:	5de2,253x72,0,0,51	:
+window	environmentConfigurator	13	:zsh	0	:##	5de4,253x72,0,0,53	:
+window	environmentConfigurator	14	:zsh	0	:##	5de6,253x72,0,0,55	:
+window	environmentConfigurator	15	:node	0	:##	6962,274x49,0,0,70	:
+window	environmentConfigurator	16	:zsh	0	:##!	5de3,253x72,0,0,71	:
+window	environmentConfigurator	17	:zsh	0	:##-	6967,274x49,0,0,75	:
+window	environmentConfigurator	18	:claude	1	:*	9472,274x49,0,0{137x49,0,0,76,136x49,138,0,77}	:
+window	firefoxHomeScreen-extension	1	:zsh	1	:*	d373,253x72,0,0{127x72,0,0,52,125x72,128,0,59}	:
+window	firefoxHomeScreen-extension	2	:zsh	0	:##-	dde2,253x72,0,0,61	:
+window	firefoxHomeScreen-extension	3	:zsh	0	:##	dde4,253x72,0,0,63	:
+window	ifmAiAnalyzer	0	:zsh	1	:##*	dde5,253x72,0,0,64	:
+window	ifmUpgrader	0	:zsh	1	:*	dde7,253x72,0,0,66	:
+window	sugartalking	0	:zsh	1	:##*	dde9,253x72,0,0,68	:
+window	sugartalking	1	:zsh	0	:##-	ddea,253x72,0,0,69	:
+state	environmentConfigurator	

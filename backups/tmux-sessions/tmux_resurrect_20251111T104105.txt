@@ -1,0 +1,71 @@
+pane	10	1	1	:##*	1	✳ Copy Selection Issue	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	claude	:claude
+pane	10	2	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	bash	:
+pane	9	1	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	bash	:
+pane	ashiorid_ai_manager	1	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	2	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	3	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	4	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	5	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	ashiorid_ai_manager	6	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	1	bash	:
+pane	autoUpgrader	0	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	bash	:
+pane	autoUpgrader	1	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	1	bash	:
+pane	autoUpgrader	1	1	:*	2	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	0	bash	:
+pane	autoUpgrader	1	1	:*	3	D2000	:/mnt/c/Users/matt/PycharmProjects/autoUpgrader	0	bash	:
+pane	backupUtil_2020	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/backupUtil_2020	1	bash	:
+pane	contextXmlMerger	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/contextXmlMerger	1	bash	:
+pane	denon_avr_x2300w_webGUI	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/denon_avr_x2300w_webGUI	1	bash	:
+pane	denon_avr_x2300w_webGUI	1	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/denon_avr_x2300w_webGUI/kubernetes	1	bash	:
+pane	environmentConfigurator	1	0	:	1	✳ Test Flag Development	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	0	bash	:
+pane	environmentConfigurator	1	0	:	2	✳ Shell Type Check	:/home/matt/.claude	0	claude	:claude
+pane	environmentConfigurator	1	0	:	3	D2000	:/home/matt	0	bash	:
+pane	environmentConfigurator	1	0	:	4	D2000	:/home/matt	1	bash	:
+pane	environmentConfigurator	2	0	:##	1	✳ Config Reorganization	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	claude	:claude
+pane	environmentConfigurator	3	0	:##	1	✳ Claude configs search	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	claude	:claude
+pane	environmentConfigurator	4	0	:##	1	✳ Tmux Sessions Persistence	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	claude	:claude
+pane	environmentConfigurator	4	0	:##	2	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	0	bash	:
+pane	environmentConfigurator	5	0	:##	1	Gemini - environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	node	:node /home/matt/.nvm/versions/node/v20.19.5/bin/gemini
+pane	environmentConfigurator	5	0	:##	2	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	0	bash	:
+pane	environmentConfigurator	6	0	:##	1	Gemini - environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	node	:node /home/matt/.nvm/versions/node/v20.19.5/bin/gemini
+pane	environmentConfigurator	7	0	:##	1	Gemini - environmentConfigurator	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	node	:node /home/matt/.nvm/versions/node/v20.19.5/bin/gemini
+pane	environmentConfigurator	8	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	python3	:python3 ./scripts/tmux-theme-switcher.py
+pane	environmentConfigurator	9	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/environmentConfigurator	1	emacs	:/snap/emacs/3261/usr/bin/emacs -nw /home/matt/.bashrc
+pane	firefoxHomeScreen-extension	1	1	:*	1	✳ Repository Format Error	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	bash	:
+pane	firefoxHomeScreen-extension	1	1	:*	2	✳ Panel Divider Styling	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	0	bash	:claude
+pane	firefoxHomeScreen-extension	2	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	bash	:
+pane	firefoxHomeScreen-extension	3	0	:	1	D2000	:/mnt/c/Users/matt/PycharmProjects/firefoxHomeScreen-extension	1	bash	:
+pane	ifmAiAnalyzer	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer	1	bash	:
+pane	ifmUpgrader	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmUpgrader	1	bash	:
+pane	sugartalking	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/sugartalking	1	bash	:
+pane	sugartalking	1	0	:-	1	D2000	:/mnt/c/Users/matt/PycharmProjects/sugartalking	1	bash	:
+window	10	1	:[tmux]	1	:##*	df71,169x72,0,0,22	:
+window	10	2	:bash	0	:-	de02,244x72,0,0,23	:
+window	9	1	:bash	1	:*	e6c0,418x38,0,0,21	:
+window	ashiorid_ai_manager	1	:tilt	0	:-	b71e,418x23,0,0,1	off
+window	ashiorid_ai_manager	2	:bash	0	:	b71f,418x23,0,0,2	:
+window	ashiorid_ai_manager	3	:bash	0	:	b720,418x23,0,0,3	:
+window	ashiorid_ai_manager	4	:bash	0	:	b721,418x23,0,0,4	:
+window	ashiorid_ai_manager	5	:bash	0	:	b722,418x23,0,0,5	:
+window	ashiorid_ai_manager	6	:bash	1	:*	b723,418x23,0,0,6	:
+window	autoUpgrader	0	:bash	0	:-	b724,418x23,0,0,7	:
+window	autoUpgrader	1	:bash	1	:*	bda0,169x72,0,0[169x47,0,0{84x47,0,0,9,84x47,85,0,10},169x24,0,48,11]	:
+window	backupUtil_2020	0	:bash	1	:*	5bc1,418x23,0,0,12	:
+window	contextXmlMerger	0	:bash	1	:*	5bc2,418x23,0,0,13	:
+window	denon_avr_x2300w_webGUI	0	:Claude	1	:*	5bc3,418x23,0,0,14	off
+window	denon_avr_x2300w_webGUI	1	:bash	0	:-	5bc4,418x23,0,0,15	:
+window	environmentConfigurator	1	:bash	0	:	62ae,317x72,0,0[317x1,0,0,30,317x70,0,2{161x70,0,2,32,78x70,162,2,34,76x70,241,2,37}]	:
+window	environmentConfigurator	2	:[tmux]	0	:##	5f01,248x72,0,0,31	:
+window	environmentConfigurator	3	:claude	0	:##	5e73,317x72,0,0,33	:
+window	environmentConfigurator	4	:claude	0	:##	cebe,277x72,0,0{140x72,0,0,35,136x72,141,0,36}	:
+window	environmentConfigurator	5	:Gemini	0	:##	0f46,263x44,0,0{131x44,0,0,38,131x44,132,0,41}	off
+window	environmentConfigurator	6	:node	0	:##	5f29,277x72,0,0,39	:
+window	environmentConfigurator	7	:node	0	:##	df20,277x72,0,0,40	:
+window	environmentConfigurator	8	:[tmux]	0	:-	e903,263x49,0,0,43	:
+window	environmentConfigurator	9	:[tmux]	1	:*	e904,263x49,0,0,44	:
+window	firefoxHomeScreen-extension	1	:[tmux]	1	:*	5af5,413x63,0,0{207x63,0,0,26,205x63,208,0,27}	:
+window	firefoxHomeScreen-extension	2	:bash	0	:-	dfc7,418x63,0,0,28	:
+window	firefoxHomeScreen-extension	3	:bash	0	:	dfc8,418x63,0,0,29	:
+window	ifmAiAnalyzer	0	:bash	1	:*	5bc5,418x23,0,0,16	:
+window	ifmUpgrader	0	:bash	1	:*	5bc6,418x23,0,0,17	:
+window	sugartalking	0	:bash	1	:*	5bc8,418x23,0,0,19	:
+window	sugartalking	1	:bash	0	:-	dbbf,418x23,0,0,20	:
+state	environmentConfigurator	
