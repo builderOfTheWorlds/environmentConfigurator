@@ -285,6 +285,8 @@ install_nerd_fonts() {
     echo "==============================================\n${NC}"
 
     # Check if unzip is installed
+    # TODO: Automatically install unzip via 'sudo apt install unzip' if not present
+    #       instead of just warning the user
     if ! command -v unzip &> /dev/null; then
         print_warning "unzip is not installed. Skipping font installation."
         echo "Install unzip with: sudo apt install unzip (Ubuntu/Debian)"
@@ -395,6 +397,8 @@ install_ohmyzsh() {
     echo "==============================================\n${NC}"
 
     # Check if zsh is installed
+    # TODO: Automatically install zsh via 'sudo apt install zsh' if not present
+    #       instead of just informing the user
     if ! command -v zsh &> /dev/null; then
         echo "Zsh is not currently installed."
     else
@@ -467,14 +471,23 @@ if [ "$TEST_MODE" = true ]; then
     echo -e "${YELLOW}No changes were made to your system.${NC}"
     echo "Run without --test flag to perform actual installation."
 else
+    # TODO: Add eza installation function (sudo apt install eza or from GitHub releases)
+    #       eza is used in .zshrc aliases but not automatically installed
+
     # Run Nerd Font installation
     install_nerd_fonts
 
+    # TODO: Refactor Oh-My-Posh and Oh-My-Zsh installation flow
+    #       Investigate if these are being run twice or can be consolidated
     # Run Oh-My-Posh installation
     install_ohmyposh
 
     # Run Oh-My-Zsh installation
     install_ohmyzsh
+
+    # TODO: Add validation step to verify all installations completed successfully
+    #       Check that: git, zsh, unzip, eza, oh-my-zsh, oh-my-posh, fonts, etc. are installed
+    #       Report any missing dependencies or failed installations before showing success message
 
     echo ""
     echo -e "${GREEN}=============================================="
