@@ -321,6 +321,63 @@ install_nerd_fonts() {
     echo ""
 }
 
+# Install Oh-My-Posh (optional)
+install_ohmyposh() {
+    echo ""
+    echo -e "${BLUE}=============================================="
+    echo "Oh-My-Posh Installation"
+    echo "==============================================\n${NC}"
+
+    # Check if oh-my-posh is already installed
+    if command -v oh-my-posh &> /dev/null; then
+        print_status "Oh-My-Posh is already installed: $(oh-my-posh version)"
+        return 0
+    fi
+
+    # Ask user if they want to install oh-my-posh
+    echo ""
+    echo "Would you like to install Oh-My-Posh?"
+    echo "Oh-My-Posh is a customizable and low-latency cross-platform prompt renderer"
+    echo "This will install:"
+    echo "  - Oh-My-Posh executable to ~/bin"
+    echo "  - Support for custom themes and configurations"
+    echo ""
+    read -p "Install Oh-My-Posh? (y/N): " -n 1 -r
+    echo
+
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+        print_status "Downloading and installing Oh-My-Posh..."
+        if [ "$TEST_MODE" = false ]; then
+            # Ensure ~/bin exists
+            mkdir -p "$HOME/bin"
+
+            # Run oh-my-posh installer
+            if curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$HOME/bin"; then
+                print_status "Oh-My-Posh installed successfully"
+
+                echo ""
+                echo -e "${GREEN}Oh-My-Posh installation complete!${NC}"
+                echo ""
+                echo "Next steps to configure Oh-My-Posh:"
+                echo "1. View available themes: oh-my-posh config export official"
+                echo "2. Add to your shell config (.bashrc or .zshrc):"
+                echo "   eval \"\$(oh-my-posh init bash)\"  # for bash"
+                echo "   eval \"\$(oh-my-posh init zsh)\"   # for zsh"
+                echo "3. Optional: Use a theme:"
+                echo "   eval \"\$(oh-my-posh init zsh --config ~/theme.json)\""
+                echo ""
+            else
+                print_error "Oh-My-Posh installation failed"
+                return 1
+            fi
+        else
+            print_status "Would install Oh-My-Posh to ~/bin"
+        fi
+    else
+        print_status "Skipping Oh-My-Posh installation"
+    fi
+}
+
 # Install Oh-My-Zsh (optional)
 install_ohmyzsh() {
     echo ""
@@ -404,6 +461,9 @@ else
     # Run Nerd Font installation
     install_nerd_fonts
 
+    # Run Oh-My-Posh installation
+    install_ohmyposh
+
     # Run Oh-My-Zsh installation
     install_ohmyzsh
 
@@ -415,7 +475,8 @@ else
     echo "Next steps:"
     echo "1. Restart your shell or run: source ~/.bashrc (or ~/.zshrc)"
     echo "2. Run 'update-env-config' anytime to pull latest changes"
-    echo "3. Manage Zsh with: zsh-setup [status|themes|plugins|edit]"
+    echo "3. Configure Oh-My-Posh in your shell (see instructions above)"
+    echo "4. Manage Zsh with: zsh-setup [status|themes|plugins|edit]"
     echo ""
     if [ -d "$BACKUP_DIR" ]; then
         echo "Your old configuration files are backed up in:"

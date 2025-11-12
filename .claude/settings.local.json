@@ -44,7 +44,8 @@
       "Bash(/dev/null)",
       "Bash(~/.tmux.conf)",
       "Bash(zsh -c \"source ~/.zshrc && echo ''Success''\")",
-      "Bash(/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/bin/claude-config backup-tmux:*)"
+      "Bash(/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/bin/claude-config backup-tmux:*)",
+      "WebFetch(domain:ohmyposh.dev)"
     ],
     "deny": [],
     "ask": []
