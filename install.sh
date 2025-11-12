@@ -1,11 +1,12 @@
 #!/bin/bash
-
 #
-# Environment Configurator - Installation Script
+# Environment Configurator - Lightweight Installation Wrapper
+# Version 2.0 - Now uses Python-based installer
+#
 # Usage:
-#   Normal install: curl -fsSL https://raw.githubusercontent.com/YOURUSERNAME/YOURREPO/main/install.sh | bash
-#   Test mode (dry run): bash install.sh --test
-#   or: curl -fsSL https://raw.githubusercontent.com/YOURUSERNAME/YOURREPO/main/install.sh | bash -s -- --test
+#   Normal install: curl -fsSL https://raw.githubusercontent.com/builderOfTheWorlds/environmentConfigurator/main/install.sh | bash
+#   Test mode: bash install.sh --test
+#   Help: bash install.sh --help
 #
 
 set -e
@@ -17,481 +18,175 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Parse command line arguments
-TEST_MODE=false
-USE_PASSWORD=false
-for arg in "$@"; do
-    case $arg in
-        --test)
-            TEST_MODE=true
-            ;;
-        --use-password)
-            USE_PASSWORD=true
-            ;;
-        --help|-h)
-            echo "Usage: $0 [options]"
-            echo ""
-            echo "Options:"
-            echo "  --test           Run in test mode (dry run, no changes)"
-            echo "  --use-password   Use username/password auth instead of token (legacy)"
-            echo "  --help, -h       Show this help message"
-            echo ""
-            echo "Examples:"
-            echo "  $0                      # Normal install with token auth"
-            echo "  $0 --test               # Test mode"
-            echo "  $0 --use-password       # Use username/password auth"
-            exit 0
-            ;;
-    esac
-done
-
 # Configuration
-REPO_BASE_URL="https://github.com/builderOfTheWorlds/environmentConfigurator.git"
+REPO_URL="https://github.com/builderOfTheWorlds/environmentConfigurator.git"
 INSTALL_DIR="$HOME/.environment-config"
-BACKUP_DIR="$HOME/.environment-config-backup-$(date +%Y%m%d-%H%M%S)"
+MIN_PYTHON_VERSION="3.8"
 
-if [ "$TEST_MODE" = true ]; then
-    echo -e "${BLUE}Environment Configurator - TEST MODE${NC}"
-    echo "=============================================="
-    echo -e "${YELLOW}Running in test mode - no changes will be made${NC}"
-else
-    echo -e "${GREEN}Environment Configurator - Installation${NC}"
-    echo "=============================================="
-fi
-echo ""
+# Print colored messages
+print_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
 
-# Function to print status messages
-print_status() {
-    if [ "$TEST_MODE" = true ]; then
-        echo -e "${BLUE}[TEST]${NC} Would: $1"
-    else
-        echo -e "${GREEN}[✓]${NC} $1"
-    fi
+print_success() {
+    echo -e "${GREEN}[✓]${NC} $1"
 }
 
 print_warning() {
-    if [ "$TEST_MODE" = true ]; then
-        echo -e "${BLUE}[TEST]${NC} Would warn: $1"
-    else
-        echo -e "${YELLOW}[!]${NC} $1"
-    fi
+    echo -e "${YELLOW}[!]${NC} $1"
 }
 
 print_error() {
     echo -e "${RED}[✗]${NC} $1"
 }
 
-# Get git credentials and build authenticated URL
-get_repo_url() {
-    local base_url="$REPO_BASE_URL"
-
-    # Extract components from URL
-    # Expected format: https://github.com/USERNAME/REPO.git
-    local url_without_protocol="${base_url#https://}"
-    local host_and_path="$url_without_protocol"
-
-    if [ "$TEST_MODE" = true ]; then
-        REPO_URL="$base_url"
-        return 0
+# Check Python version
+check_python() {
+    if ! command -v python3 &> /dev/null; then
+        print_error "Python 3 is not installed"
+        echo "Please install Python 3.8 or higher first."
+        exit 1
     fi
 
-    # Check if repo is public by attempting anonymous clone test
-    # If it's public, no auth needed
-    if git ls-remote "$base_url" HEAD &>/dev/null; then
-        print_status "Repository is public, no authentication needed"
-        REPO_URL="$base_url"
-        return 0
+    # Check Python version
+    local python_version=$(python3 -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')
+    local required_version="$MIN_PYTHON_VERSION"
+
+    if ! python3 -c "import sys; exit(0 if sys.version_info >= (3, 8) else 1)"; then
+        print_error "Python $python_version is installed, but Python $required_version or higher is required"
+        exit 1
     fi
 
-    # Private repo - need credentials
+    print_success "Python $python_version found"
+}
+
+# Check Git
+check_git() {
+    if ! command -v git &> /dev/null; then
+        print_error "Git is not installed"
+        echo "Please install git first."
+        exit 1
+    fi
+    print_success "Git found"
+}
+
+# Main installation
+main() {
     echo ""
-    echo -e "${YELLOW}Authentication required for private repository${NC}"
+    echo -e "${GREEN}========================================${NC}"
+    echo -e "${GREEN}Environment Configurator v2.0${NC}"
+    echo -e "${GREEN}========================================${NC}"
     echo ""
 
-    if [ "$USE_PASSWORD" = true ]; then
-        # Legacy username/password authentication
-        echo -e "${YELLOW}Note: Username/password auth is deprecated on GitHub.${NC}"
-        echo -e "${YELLOW}Consider using a Personal Access Token instead.${NC}"
-        echo ""
-        read -p "GitHub Username: " gh_username
-        read -sp "GitHub Password: " gh_password
-        echo ""
+    # Check prerequisites
+    print_info "Checking prerequisites..."
+    check_python
+    check_git
 
-        REPO_URL="https://${gh_username}:${gh_password}@${host_and_path}"
+    # Clone or update repository
+    if [ -d "$INSTALL_DIR" ]; then
+        print_info "Updating existing installation..."
+        cd "$INSTALL_DIR"
+        git pull origin main || {
+            print_warning "Could not update repository, continuing with existing version"
+        }
     else
-        # Token authentication (default)
-        echo "To create a Personal Access Token:"
-        echo "1. Go to: https://github.com/settings/tokens"
-        echo "2. Click 'Generate new token (classic)'"
-        echo "3. Select scope: 'repo' (full control)"
-        echo "4. Copy the generated token"
-        echo ""
-        read -sp "GitHub Personal Access Token: " gh_token
-        echo ""
-
-        if [ -z "$gh_token" ]; then
-            print_error "Token cannot be empty"
+        print_info "Cloning repository..."
+        git clone "$REPO_URL" "$INSTALL_DIR" || {
+            print_error "Failed to clone repository"
             exit 1
-        fi
-
-        REPO_URL="https://${gh_token}@${host_and_path}"
-    fi
-}
-
-# Check if git is installed
-if ! command -v git &> /dev/null; then
-    print_error "Git is not installed. Please install git first."
-    exit 1
-fi
-
-# Get authenticated repository URL
-get_repo_url
-
-# Backup existing files
-backup_file() {
-    local file=$1
-    if [ -f "$HOME/$file" ]; then
-        if [ "$TEST_MODE" = false ]; then
-            mkdir -p "$BACKUP_DIR"
-            cp "$HOME/$file" "$BACKUP_DIR/"
-        fi
-        print_warning "Backed up existing $file to $BACKUP_DIR"
-    fi
-}
-
-# Clone or update repository
-if [ -d "$INSTALL_DIR" ]; then
-    print_status "Updating existing installation..."
-    if [ "$TEST_MODE" = false ]; then
+        }
         cd "$INSTALL_DIR"
-        git pull origin main
     fi
-else
-    print_status "Cloning repository..."
-    if [ "$TEST_MODE" = false ]; then
-        git clone "$REPO_URL" "$INSTALL_DIR"
-        cd "$INSTALL_DIR"
 
-        # Configure git credential helper to cache token for future operations
-        # This ensures auto-updates and manual pulls work without re-entering credentials
-        git config credential.helper store
-        print_status "Git credential helper configured for future updates"
-    fi
-fi
+    # Install Python package and dependencies
+    print_info "Installing Python package and dependencies..."
 
-# Backup existing dotfiles
-print_status "Backing up existing configuration files..."
-backup_file ".bashrc"
-backup_file ".zshrc"
-backup_file ".gitconfig"
-backup_file ".tmux.conf"
-
-# Create symlinks for dotfiles
-print_status "Installing dotfiles..."
-for file in "$INSTALL_DIR"/dotfiles/.*; do
-    if [ -f "$file" ] || [ "$TEST_MODE" = true ]; then
-        filename=$(basename "$file")
-        # Skip . and ..
-        if [ "$filename" != "." ] && [ "$filename" != ".." ]; then
-            if [ "$TEST_MODE" = false ]; then
-                ln -sf "$file" "$HOME/$filename"
-            fi
-            print_status "Linked $filename"
+    # Try to use virtual environment if available, otherwise install user-level
+    if command -v python3 -m venv &> /dev/null; then
+        # Create venv if it doesn't exist
+        if [ ! -d "$INSTALL_DIR/.venv" ]; then
+            python3 -m venv "$INSTALL_DIR/.venv"
         fi
-    fi
-done
-
-# Also handle non-hidden files in dotfiles directory
-for file in "$INSTALL_DIR"/dotfiles/*; do
-    if [ -f "$file" ] || [ "$TEST_MODE" = true ]; then
-        filename=$(basename "$file")
-        # Add dot prefix for home directory
-        if [ "$TEST_MODE" = false ]; then
-            ln -sf "$file" "$HOME/.$filename"
-        fi
-        print_status "Linked .$filename"
-    fi
-done
-
-# Install scripts to ~/bin
-print_status "Installing scripts..."
-if [ "$TEST_MODE" = false ]; then
-    mkdir -p "$HOME/bin"
-fi
-for script in "$INSTALL_DIR"/scripts/*; do
-    if [ -f "$script" ] || [ "$TEST_MODE" = true ]; then
-        scriptname=$(basename "$script")
-        if [ "$TEST_MODE" = false ]; then
-            ln -sf "$script" "$HOME/bin/$scriptname"
-            chmod +x "$HOME/bin/$scriptname"
-        fi
-        print_status "Installed $scriptname"
-    fi
-done
-
-# Add ~/bin to PATH if not already there
-if [[ ":$PATH:" != *":$HOME/bin:"* ]]; then
-    if [ -f "$HOME/.bashrc" ]; then
-        if [ "$TEST_MODE" = false ]; then
-            echo '' >> "$HOME/.bashrc"
-            echo '# Add ~/bin to PATH' >> "$HOME/.bashrc"
-            echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.bashrc"
-        fi
-        print_status "Added ~/bin to PATH in .bashrc"
-    fi
-    if [ -f "$HOME/.zshrc" ]; then
-        if [ "$TEST_MODE" = false ]; then
-            echo '' >> "$HOME/.zshrc"
-            echo '# Add ~/bin to PATH' >> "$HOME/.zshrc"
-            echo 'export PATH="$HOME/bin:$PATH"' >> "$HOME/.zshrc"
-        fi
-        print_status "Added ~/bin to PATH in .zshrc"
-    fi
-fi
-
-# Setup auto-update via cron (optional)
-print_status "Setting up auto-update..."
-if [ "$TEST_MODE" = false ]; then
-    # Use cron-manager if available, otherwise set up directly
-    if [ -f "$INSTALL_DIR/bin/cron-manager" ]; then
-        # Check if cron job already exists
-        if ! crontab -l 2>/dev/null | grep -q "$INSTALL_DIR.*git pull"; then
-            CRON_CMD="0 */6 * * * cd $INSTALL_DIR && git pull origin main > /dev/null 2>&1"
-            (crontab -l 2>/dev/null | grep -v "$INSTALL_DIR" ; echo "# Environment config auto-update"; echo "$CRON_CMD") | crontab - 2>/dev/null || print_warning "Could not set up cron job (cron may not be available)"
-        fi
+        source "$INSTALL_DIR/.venv/bin/activate"
+        pip install --upgrade pip > /dev/null 2>&1
+        pip install -e "$INSTALL_DIR" > /dev/null 2>&1 || {
+            print_error "Failed to install Python package"
+            exit 1
+        }
     else
-        CRON_CMD="0 */6 * * * cd $INSTALL_DIR && git pull origin main > /dev/null 2>&1"
-        (crontab -l 2>/dev/null | grep -v "$INSTALL_DIR" ; echo "$CRON_CMD") | crontab - 2>/dev/null || print_warning "Could not set up cron job (cron may not be available)"
+        # Install at user level
+        python3 -m pip install --user --upgrade pip > /dev/null 2>&1
+        python3 -m pip install --user -e "$INSTALL_DIR" > /dev/null 2>&1 || {
+            print_error "Failed to install Python package"
+            exit 1
+        }
     fi
-fi
-print_status "Auto-update scheduled (every 6 hours)"
 
-# Create update script
-if [ "$TEST_MODE" = false ]; then
-    cat > "$HOME/bin/update-env-config" << 'UPDATESCRIPT'
-#!/bin/bash
-cd "$HOME/.environment-config" && git pull origin main
-echo "Environment configuration updated!"
-UPDATESCRIPT
-    chmod +x "$HOME/bin/update-env-config"
-fi
-print_status "Created update-env-config command"
+    print_success "Python package installed"
 
-# Install Nerd Fonts
-install_nerd_fonts() {
+    # Run the Python installer
+    print_info "Running environment configurator installer..."
     echo ""
-    echo -e "${BLUE}=============================================="
-    echo "Nerd Font Installation"
-    echo "==============================================\n${NC}"
 
-    # Check if unzip is installed
-    if ! command -v unzip &> /dev/null; then
-        print_warning "unzip is not installed. Skipping font installation."
-        echo "Install unzip with: sudo apt install unzip (Ubuntu/Debian)"
-        return 1
-    fi
-
-    # Check if fontconfig is installed
-    if ! command -v fc-cache &> /dev/null; then
-        print_warning "fontconfig is not installed. Font cache will not be updated."
-        echo "Install fontconfig with: sudo apt install fontconfig (Ubuntu/Debian)"
-    fi
-
-    # Create fonts directory
-    FONTS_DIR="$HOME/.local/share/fonts"
-    if [ "$TEST_MODE" = false ]; then
-        mkdir -p "$FONTS_DIR/NerdFonts"
-    fi
-    print_status "Created fonts directory at $FONTS_DIR/NerdFonts"
-
-    # Install Ubuntu Nerd Font
-    FONT_ZIP="$INSTALL_DIR/fonts/Ubuntu.zip"
-    if [ -f "$FONT_ZIP" ] || [ "$TEST_MODE" = true ]; then
-        print_status "Installing Ubuntu Nerd Font..."
-        if [ "$TEST_MODE" = false ]; then
-            unzip -o "$FONT_ZIP" -d "$FONTS_DIR/NerdFonts" > /dev/null 2>&1
-        fi
-        print_status "Ubuntu Nerd Font installed"
-
-        # Update font cache
-        if command -v fc-cache &> /dev/null; then
-            if [ "$TEST_MODE" = false ]; then
-                fc-cache -f "$FONTS_DIR" > /dev/null 2>&1
-            fi
-            print_status "Font cache updated"
-        fi
+    # Pass through command line arguments
+    if [ -d "$INSTALL_DIR/.venv" ]; then
+        source "$INSTALL_DIR/.venv/bin/activate"
+        env-config install "$@"
     else
-        print_warning "Font file not found at $FONT_ZIP"
+        python3 -m environment_configurator.cli.main install "$@"
     fi
 
-    echo ""
-    echo -e "${GREEN}Nerd Fonts installation complete!${NC}"
-    echo "The Ubuntu Nerd Font is now available for use with Starship and other applications."
-    echo ""
-}
-
-# Install Oh-My-Posh (optional)
-install_ohmyposh() {
-    echo ""
-    echo -e "${BLUE}=============================================="
-    echo "Oh-My-Posh Installation"
-    echo "==============================================\n${NC}"
-
-    # Check if oh-my-posh is already installed
-    if command -v oh-my-posh &> /dev/null; then
-        print_status "Oh-My-Posh is already installed: $(oh-my-posh version)"
-        return 0
-    fi
-
-    # Ask user if they want to install oh-my-posh
-    echo ""
-    echo "Would you like to install Oh-My-Posh?"
-    echo "Oh-My-Posh is a customizable and low-latency cross-platform prompt renderer"
-    echo "This will install:"
-    echo "  - Oh-My-Posh executable to ~/bin"
-    echo "  - Support for custom themes and configurations"
-    echo ""
-    read -p "Install Oh-My-Posh? (y/N): " -n 1 -r
-    echo
-
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        print_status "Downloading and installing Oh-My-Posh..."
-        if [ "$TEST_MODE" = false ]; then
-            # Ensure ~/bin exists
-            mkdir -p "$HOME/bin"
-
-            # Run oh-my-posh installer
-            if curl -s https://ohmyposh.dev/install.sh | bash -s -- -d "$HOME/bin"; then
-                print_status "Oh-My-Posh installed successfully"
-
-                echo ""
-                echo -e "${GREEN}Oh-My-Posh installation complete!${NC}"
-                echo ""
-                echo "Next steps to configure Oh-My-Posh:"
-                echo "1. View available themes: oh-my-posh config export official"
-                echo "2. Add to your shell config (.bashrc or .zshrc):"
-                echo "   eval \"\$(oh-my-posh init bash)\"  # for bash"
-                echo "   eval \"\$(oh-my-posh init zsh)\"   # for zsh"
-                echo "3. Optional: Use a theme:"
-                echo "   eval \"\$(oh-my-posh init zsh --config ~/theme.json)\""
-                echo ""
-            else
-                print_error "Oh-My-Posh installation failed"
-                return 1
-            fi
-        else
-            print_status "Would install Oh-My-Posh to ~/bin"
-        fi
-    else
-        print_status "Skipping Oh-My-Posh installation"
-    fi
-}
-
-# Install Oh-My-Zsh (optional)
-install_ohmyzsh() {
-    echo ""
-    echo -e "${BLUE}=============================================="
-    echo "Oh-My-Zsh Installation"
-    echo "==============================================\n${NC}"
-
-    # Check if zsh is installed
-    if ! command -v zsh &> /dev/null; then
-        echo "Zsh is not currently installed."
-    else
-        echo "Zsh is installed: $(zsh --version)"
-    fi
-
-    # Check if oh-my-zsh is already installed
-    if [ -d "$HOME/.oh-my-zsh" ]; then
-        print_status "Oh-My-Zsh is already installed"
-        return 0
-    fi
-
-    # Ask user if they want to install oh-my-zsh
-    echo ""
-    echo "Would you like to install Oh-My-Zsh?"
-    echo "This will install:"
-    echo "  - Zsh (if not installed)"
-    echo "  - Oh-My-Zsh framework"
-    echo "  - Useful plugins (git, docker, python, etc.)"
-    echo "  - zsh-autosuggestions & zsh-syntax-highlighting"
-    echo "  - Agnoster theme"
-    echo ""
-    read -p "Install Oh-My-Zsh? (y/N): " -n 1 -r
-    echo
-
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        if [ -f "$INSTALL_DIR/scripts/install-ohmyzsh.sh" ]; then
-            print_status "Running Oh-My-Zsh installer..."
-            bash "$INSTALL_DIR/scripts/install-ohmyzsh.sh"
-
-            # Set zsh as default shell
-            if command -v zsh &> /dev/null; then
-                echo ""
-                echo "Would you like to set Zsh as your default shell?"
-                read -p "Set Zsh as default? (Y/n): " -n 1 -r
-                echo
-
-                if [[ $REPLY =~ ^[Nn]$ ]]; then
-                    print_status "Keeping current default shell"
-                else
-                    ZSH_PATH=$(which zsh)
-                    if [ -n "$ZSH_PATH" ]; then
-                        print_status "Setting Zsh as default shell..."
-                        if chsh -s "$ZSH_PATH"; then
-                            print_status "Default shell changed to Zsh"
-                            echo -e "${GREEN}You'll need to log out and back in for the change to take effect${NC}"
-                        else
-                            print_warning "Could not change default shell. You may need to run: chsh -s $ZSH_PATH"
-                        fi
-                    else
-                        print_warning "Could not locate zsh binary"
-                    fi
-                fi
-            fi
-        else
-            print_warning "Oh-My-Zsh installer script not found at $INSTALL_DIR/scripts/install-ohmyzsh.sh"
-        fi
-    else
-        print_status "Skipping Oh-My-Zsh installation"
-        echo "You can install it later by running: $HOME/bin/zsh-setup install"
-    fi
-}
-
-echo ""
-if [ "$TEST_MODE" = true ]; then
-    echo -e "${BLUE}=============================================="
-    echo "Test run complete!"
-    echo "=============================================="
-    echo ""
-    echo -e "${YELLOW}No changes were made to your system.${NC}"
-    echo "Run without --test flag to perform actual installation."
-else
-    # Run Nerd Font installation
-    install_nerd_fonts
-
-    # Run Oh-My-Posh installation
-    install_ohmyposh
-
-    # Run Oh-My-Zsh installation
-    install_ohmyzsh
-
-    echo ""
-    echo -e "${GREEN}=============================================="
-    echo "Installation complete!"
-    echo "=============================================="
-    echo ""
-    echo "Next steps:"
-    echo "1. Restart your shell or run: source ~/.bashrc (or ~/.zshrc)"
-    echo "2. Run 'update-env-config' anytime to pull latest changes"
-    echo "3. Configure Oh-My-Posh in your shell (see instructions above)"
-    echo "4. Manage Zsh with: zsh-setup [status|themes|plugins|edit]"
-    echo "5. Manage cron jobs with: cron-manager [status|list|add-preset]"
-
-    echo ""
-    if [ -d "$BACKUP_DIR" ]; then
-        echo "Your old configuration files are backed up in:"
-        echo "$BACKUP_DIR"
+    # Check exit code
+    if [ $? -eq 0 ]; then
         echo ""
+        echo -e "${GREEN}========================================${NC}"
+        echo -e "${GREEN}Installation completed successfully!${NC}"
+        echo -e "${GREEN}========================================${NC}"
+        echo ""
+        echo "Next steps:"
+        echo "  1. Restart your shell or run: source ~/.bashrc (or ~/.zshrc)"
+        echo "  2. Run 'env-config status' to check installation"
+        echo "  3. Run 'tmux-theme-switcher list' to see available themes"
+        echo "  4. Run 'env-config --help' for more commands"
+        echo ""
+    else
+        echo ""
+        print_error "Installation failed"
+        echo "Check the logs for details."
+        exit 1
     fi
+}
+
+# Show help
+show_help() {
+    cat << EOF
+Environment Configurator - Installation Script v2.0
+
+Usage: $0 [options]
+
+Options:
+  --test              Run in test mode (dry run, no changes)
+  --no-fonts          Skip font installation
+  --no-auto-update    Disable auto-update cron job
+  --help, -h          Show this help message
+
+Examples:
+  $0                      # Normal installation
+  $0 --test               # Test mode (dry run)
+  $0 --no-fonts           # Skip font installation
+
+For more information, visit:
+  https://github.com/builderOfTheWorlds/environmentConfigurator
+
+EOF
+}
+
+# Parse command line arguments
+if [[ "$1" == "--help" ]] || [[ "$1" == "-h" ]]; then
+    show_help
+    exit 0
 fi
+
+# Run main installation
+main "$@"
