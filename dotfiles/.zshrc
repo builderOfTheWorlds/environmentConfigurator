@@ -14,6 +14,15 @@ export PATH="$HOME/.cargo/bin:$PATH"
 eval "$(starship init zsh)"
 
 # ========================================
+# ZSH Plugins
+# ========================================
+# Fish-like autosuggestions
+source ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+
+# Syntax highlighting (must be last)
+source ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+# ========================================
 # Modern CLI Tools Configuration
 # ========================================
 
@@ -104,4 +113,4 @@ zstyle ':completion:*' menu select
 # ========================================
 # Welcome Message
 # ========================================
-echo "Welcome to your riced terminal!"
+# echo "Welcome to your riced terminal!"

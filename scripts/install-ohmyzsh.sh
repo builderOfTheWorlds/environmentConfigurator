@@ -140,6 +140,29 @@ EOF
     print_success "Added custom aliases"
 }
 
+install_powerlevel10k() {
+    print_info "Installing Powerlevel10k theme..."
+
+    ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+
+    # Install Powerlevel10k
+    if [ ! -d "$ZSH_CUSTOM/themes/powerlevel10k" ]; then
+        git clone --depth=1 https://github.com/romkatv/powerlevel10k.git "$ZSH_CUSTOM/themes/powerlevel10k"
+        print_success "Installed Powerlevel10k theme"
+    else
+        print_info "Powerlevel10k already installed"
+    fi
+
+    # Set Powerlevel10k as the theme
+    ZSHRC="$HOME/.zshrc"
+    if [ -f "$ZSHRC" ]; then
+        sed -i 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$ZSHRC" 2>/dev/null || \
+        sed -i '' 's/ZSH_THEME=".*"/ZSH_THEME="powerlevel10k\/powerlevel10k"/' "$ZSHRC" 2>/dev/null
+        print_success "Set theme to Powerlevel10k"
+        print_info "Run 'p10k configure' after starting Zsh to customize the theme"
+    fi
+}
+
 install_plugins() {
     print_info "Installing additional Zsh plugins..."
 
@@ -218,6 +241,11 @@ main() {
 
     echo ""
 
+    # Install Powerlevel10k theme
+    install_powerlevel10k
+
+    echo ""
+
     # Install additional plugins
     install_plugins
 
@@ -231,6 +259,7 @@ main() {
     print_success "Oh-My-Zsh installation complete!"
     echo ""
     print_info "To start using Zsh now, run: exec zsh"
+    print_info "To customize Powerlevel10k theme, run: p10k configure"
     print_info "To customize further, edit: ~/.zshrc"
     echo ""
 }

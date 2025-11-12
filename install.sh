@@ -305,6 +305,31 @@ install_ohmyzsh() {
         if [ -f "$INSTALL_DIR/scripts/install-ohmyzsh.sh" ]; then
             print_status "Running Oh-My-Zsh installer..."
             bash "$INSTALL_DIR/scripts/install-ohmyzsh.sh"
+
+            # Set zsh as default shell
+            if command -v zsh &> /dev/null; then
+                echo ""
+                echo "Would you like to set Zsh as your default shell?"
+                read -p "Set Zsh as default? (Y/n): " -n 1 -r
+                echo
+
+                if [[ $REPLY =~ ^[Nn]$ ]]; then
+                    print_status "Keeping current default shell"
+                else
+                    ZSH_PATH=$(which zsh)
+                    if [ -n "$ZSH_PATH" ]; then
+                        print_status "Setting Zsh as default shell..."
+                        if chsh -s "$ZSH_PATH"; then
+                            print_status "Default shell changed to Zsh"
+                            echo -e "${GREEN}You'll need to log out and back in for the change to take effect${NC}"
+                        else
+                            print_warning "Could not change default shell. You may need to run: chsh -s $ZSH_PATH"
+                        fi
+                    else
+                        print_warning "Could not locate zsh binary"
+                    fi
+                fi
+            fi
         else
             print_warning "Oh-My-Zsh installer script not found at $INSTALL_DIR/scripts/install-ohmyzsh.sh"
         fi

@@ -2,12 +2,16 @@
 """
 Interactive Tmux Theme Switcher
 A beautiful TUI for browsing and applying tmux themes with live preview.
+Now includes themes from eza-community/eza-themes collection!
 """
+
+VERSION = "1.1.0"
 
 import os
 import sys
 import shutil
 import subprocess
+import unicodedata
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
@@ -39,7 +43,7 @@ class Theme:
 
 # Theme Database - Categorized by primary color
 THEMES = {
-    "🟢 Green": [
+    "[GREEN]": [
         Theme(
             name="Matrix Green",
             category="green",
@@ -179,7 +183,7 @@ THEMES = {
             }
         ),
     ],
-    "🔵 Blue": [
+    "[BLUE]": [
         Theme(
             name="Gemini",
             category="blue",
@@ -273,7 +277,7 @@ THEMES = {
             }
         ),
     ],
-    "🟣 Purple": [
+    "[PURPLE]": [
         Theme(
             name="Purple Dream",
             category="purple",
@@ -344,7 +348,7 @@ THEMES = {
             }
         ),
     ],
-    "🌸 Pink/Rose": [
+    "[PINK/ROSE]": [
         Theme(
             name="Rose Pine",
             category="pink",
@@ -392,7 +396,7 @@ THEMES = {
             }
         ),
     ],
-    "🟠 Orange/Warm": [
+    "[ORANGE/WARM]": [
         Theme(
             name="Monokai Pro",
             category="orange",
@@ -440,7 +444,7 @@ THEMES = {
             }
         ),
     ],
-    "🟦 Cyan/Teal": [
+    "[CYAN/TEAL]": [
         Theme(
             name="Mint/Teal",
             category="cyan",
@@ -465,7 +469,7 @@ THEMES = {
             }
         ),
     ],
-    "⚪ Neutral/Light": [
+    "[NEUTRAL/LIGHT]": [
         Theme(
             name="Solarized Light",
             category="light",
@@ -513,6 +517,270 @@ THEMES = {
             }
         ),
     ],
+    # EZA Themes - From eza-community/eza-themes
+    "[EZA-BLUE]": [
+        Theme(
+            name="Frosty",
+            category="blue",
+            description="From eza-themes collection",
+            bg_color="#161818",
+            fg_color="#E0F7FA",
+            accent_color="#FFFFFF",
+            border_color="#90A4AE",
+            border_active="#FFFFFF",
+            inactive_bg="#2d2f2f",
+            message_bg="#FFFFFF",
+            message_fg="#161818",
+            activity_color="#80DEEA",
+            dir_color="01;35",
+            bat_theme="Nord",
+            ps1_color="\\[\\033[01;35m\\]",
+            color_swatches={
+                "BG": "#161818",
+                "FG": "#E0F7FA",
+                "Accent": "#FFFFFF",
+                "Border": "#FFFFFF",
+            }
+        ),
+        Theme(
+            name="One Dark",
+            category="blue",
+            description="From eza-themes collection",
+            bg_color="#111113",
+            fg_color="#ABB2BF",
+            accent_color="#61AFEF",
+            border_color="#5C6370",
+            border_active="#61AFEF",
+            inactive_bg="#28282a",
+            message_bg="#61AFEF",
+            message_fg="#111113",
+            activity_color="#98C379",
+            dir_color="01;34",
+            bat_theme="OneHalfDark",
+            ps1_color="\\[\\033[01;34m\\]",
+            color_swatches={
+                "BG": "#111113",
+                "FG": "#ABB2BF",
+                "Accent": "#61AFEF",
+                "Border": "#61AFEF",
+            }
+        ),
+        Theme(
+            name="Solarized Dark (eza)",
+            category="blue",
+            description="From eza-themes collection",
+            bg_color="#0d0e0e",
+            fg_color="#839496",
+            accent_color="#268bd2",
+            border_color="#657b83",
+            border_active="#268bd2",
+            inactive_bg="#252626",
+            message_bg="#268bd2",
+            message_fg="#0d0e0e",
+            activity_color="#859900",
+            dir_color="01;34",
+            bat_theme="Solarized (dark)",
+            ps1_color="\\[\\033[01;34m\\]",
+            color_swatches={
+                "BG": "#0d0e0e",
+                "FG": "#839496",
+                "Accent": "#268bd2",
+                "Border": "#268bd2",
+            }
+        ),
+        Theme(
+            name="Tokyo Night (eza)",
+            category="blue",
+            description="From eza-themes collection",
+            bg_color="#131418",
+            fg_color="#c0caf5",
+            accent_color="#7aa2f7",
+            border_color="#414868",
+            border_active="#7aa2f7",
+            inactive_bg="#2a2b2f",
+            message_bg="#7aa2f7",
+            message_fg="#131418",
+            activity_color="#9ece6a",
+            dir_color="01;34",
+            bat_theme="OneHalfDark",
+            ps1_color="\\[\\033[01;34m\\]",
+            color_swatches={
+                "BG": "#131418",
+                "FG": "#c0caf5",
+                "Accent": "#7aa2f7",
+                "Border": "#7aa2f7",
+            }
+        ),
+    ],
+    "[EZA-GREEN]": [
+        Theme(
+            name="Gruvbox Dark (eza)",
+            category="green",
+            description="From eza-themes collection",
+            bg_color="#171511",
+            fg_color="#ebdbb2",
+            accent_color="#83a598",
+            border_color="#928374",
+            border_active="#83a598",
+            inactive_bg="#2e2c28",
+            message_bg="#83a598",
+            message_fg="#171511",
+            activity_color="#b8bb26",
+            dir_color="00;32",
+            bat_theme="gruvbox-dark",
+            ps1_color="\\[\\033[00;32m\\]",
+            color_swatches={
+                "BG": "#171511",
+                "FG": "#ebdbb2",
+                "Accent": "#83a598",
+                "Border": "#83a598",
+            }
+        ),
+    ],
+    "[EZA-NEUTRAL/LIGHT]": [
+        Theme(
+            name="Gruvbox Light (eza)",
+            category="light",
+            description="From eza-themes collection",
+            bg_color="#ebebea",
+            fg_color="#2a2725",
+            accent_color="#076678",
+            border_color="#7c6f64",
+            border_active="#076678",
+            inactive_bg="#dfdfde",
+            message_bg="#076678",
+            message_fg="#ebebea",
+            activity_color="#98971a",
+            dir_color="00;34",
+            bat_theme="gruvbox-light",
+            ps1_color="\\[\\033[00;34m\\]",
+            color_swatches={
+                "BG": "#ebebea",
+                "FG": "#2a2725",
+                "Accent": "#076678",
+                "Border": "#076678",
+            }
+        ),
+        Theme(
+            name="Rose Pine Dawn (eza)",
+            category="light",
+            description="From eza-themes collection",
+            bg_color="#eeedf1",
+            fg_color="#3c3954",
+            accent_color="#56949f",
+            border_color="#797593",
+            border_active="#56949f",
+            inactive_bg="#e2e1e4",
+            message_bg="#56949f",
+            message_fg="#eeedf1",
+            activity_color="#907aa9",
+            dir_color="00;34",
+            bat_theme="GitHub",
+            ps1_color="\\[\\033[00;34m\\]",
+            color_swatches={
+                "BG": "#eeedf1",
+                "FG": "#3c3954",
+                "Accent": "#56949f",
+                "Border": "#56949f",
+            }
+        ),
+    ],
+    "[EZA-PINK/ROSE]": [
+        Theme(
+            name="Rose Pine Moon (eza)",
+            category="pink",
+            description="From eza-themes collection",
+            bg_color="#161618",
+            fg_color="#e0def4",
+            accent_color="#9ccfd8",
+            border_color="#908caa",
+            border_active="#9ccfd8",
+            inactive_bg="#2d2d2f",
+            message_bg="#9ccfd8",
+            message_fg="#161618",
+            activity_color="#c4a7e7",
+            dir_color="01;34",
+            bat_theme="Nord",
+            ps1_color="\\[\\033[01;34m\\]",
+            color_swatches={
+                "BG": "#161618",
+                "FG": "#e0def4",
+                "Accent": "#9ccfd8",
+                "Border": "#9ccfd8",
+            }
+        ),
+        Theme(
+            name="Rose Pine (eza)",
+            category="pink",
+            description="From eza-themes collection",
+            bg_color="#161618",
+            fg_color="#e0def4",
+            accent_color="#9ccfd8",
+            border_color="#908caa",
+            border_active="#9ccfd8",
+            inactive_bg="#2d2d2f",
+            message_bg="#9ccfd8",
+            message_fg="#161618",
+            activity_color="#c4a7e7",
+            dir_color="01;34",
+            bat_theme="Nord",
+            ps1_color="\\[\\033[01;34m\\]",
+            color_swatches={
+                "BG": "#161618",
+                "FG": "#e0def4",
+                "Accent": "#9ccfd8",
+                "Border": "#9ccfd8",
+            }
+        ),
+    ],
+    "[EZA-PURPLE]": [
+        Theme(
+            name="Catppuccin (eza)",
+            category="purple",
+            description="From eza-themes collection",
+            bg_color="#121316",
+            fg_color="#BAC2DE",
+            accent_color="#89B4FA",
+            border_color="#7F849C",
+            border_active="#89B4FA",
+            inactive_bg="#292a2d",
+            message_bg="#89B4FA",
+            message_fg="#121316",
+            activity_color="#A6E3A1",
+            dir_color="01;34",
+            bat_theme="Catppuccin-mocha",
+            ps1_color="\\[\\033[01;34m\\]",
+            color_swatches={
+                "BG": "#121316",
+                "FG": "#BAC2DE",
+                "Accent": "#89B4FA",
+                "Border": "#89B4FA",
+            }
+        ),
+        Theme(
+            name="Dracula (eza)",
+            category="purple",
+            description="From eza-themes collection",
+            bg_color="#181818",
+            fg_color="#F8F8F2",
+            accent_color="#8BE9FD",
+            border_color="#6272A4",
+            border_active="#8BE9FD",
+            inactive_bg="#2f2f2f",
+            message_bg="#8BE9FD",
+            message_fg="#181818",
+            activity_color="#50FA7B",
+            dir_color="01;34",
+            bat_theme="Dracula",
+            ps1_color="\\[\\033[01;34m\\]",
+            color_swatches={
+                "BG": "#181818",
+                "FG": "#F8F8F2",
+                "Accent": "#8BE9FD",
+                "Border": "#8BE9FD",
+            }
+        ),
+    ],
 }
 
 
@@ -523,6 +791,38 @@ def get_all_themes() -> List[Tuple[str, Theme]]:
         for theme in theme_list:
             themes.append((category, theme))
     return themes
+
+
+def get_display_width(text: str) -> int:
+    """Calculate display width accounting for wide characters like emojis"""
+    width = 0
+    i = 0
+    while i < len(text):
+        char = text[i]
+        code = ord(char)
+
+        # Emoji presentation selectors and variation selectors
+        if i + 1 < len(text) and ord(text[i + 1]) in range(0xFE00, 0xFE0F + 1):
+            i += 1  # Skip variation selector
+
+        # Check for various wide character ranges
+        if code >= 0x1F000:  # Emoji range (most emojis - this is the main emoji block)
+            width += 2
+        elif code >= 0x2600 and code <= 0x27BF:  # Misc symbols and Dingbats (includes ⚪)
+            width += 2
+        elif code >= 0x2300 and code <= 0x23FF:  # Misc Technical
+            width += 2
+        # Geometric shapes - most render as width 1 in terminals, so skip this block
+        # elif code >= 0x25A0 and code <= 0x25FF:  # Geometric shapes
+        #     width += 2
+        elif unicodedata.east_asian_width(char) in ('F', 'W'):  # Fullwidth, Wide (not Ambiguous)
+            width += 2
+        else:
+            width += 1
+
+        i += 1
+
+    return width
 
 
 def hex_to_rgb(hex_color: str) -> Tuple[int, int, int]:
@@ -565,12 +865,52 @@ class ThemeSwitcher:
         curses.init_pair(5, curses.COLOR_MAGENTA, -1)  # Accent
         curses.init_pair(6, curses.COLOR_BLACK, curses.COLOR_CYAN)  # Selected bg
 
+        # Dynamic color pairs for theme preview (7-15 reserved)
+        # These will be updated dynamically based on selected theme
+        for i in range(7, 16):
+            curses.init_pair(i, curses.COLOR_WHITE, -1)
+
+    def update_theme_colors(self, theme: Theme):
+        """Update dynamic color pairs based on selected theme"""
+        if not curses.has_colors() or not curses.can_change_color():
+            return
+
+        # Try to update dynamic colors if terminal supports it
+        try:
+            # Extract RGB from theme colors
+            bg_rgb = hex_to_rgb(theme.bg_color)
+            fg_rgb = hex_to_rgb(theme.fg_color)
+            accent_rgb = hex_to_rgb(theme.accent_color)
+            border_rgb = hex_to_rgb(theme.border_color)
+
+            # Convert to curses color range (0-1000)
+            bg_curses = rgb_to_curses(*bg_rgb)
+            fg_curses = rgb_to_curses(*fg_rgb)
+            accent_curses = rgb_to_curses(*accent_rgb)
+            border_curses = rgb_to_curses(*border_rgb)
+
+            # Define custom colors (only if terminal supports it)
+            if curses.COLORS >= 256:
+                # Use high color numbers to avoid conflicts
+                curses.init_color(100, *bg_curses)
+                curses.init_color(101, *fg_curses)
+                curses.init_color(102, *accent_curses)
+                curses.init_color(103, *border_curses)
+
+                # Update dynamic color pairs for preview
+                curses.init_pair(7, 102, -1)   # Accent color
+                curses.init_pair(8, 101, -1)   # Foreground color
+                curses.init_pair(9, 103, -1)   # Border color
+        except:
+            # If terminal doesn't support color changes, fall back to approximations
+            pass
+
     def draw_header(self):
         """Draw the header"""
         height, width = self.stdscr.getmaxyx()
 
-        # Title
-        title = "🎨 TMUX THEME SWITCHER"
+        # Title with version
+        title = f"TMUX THEME SWITCHER v{VERSION}"
         self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
         self.stdscr.addstr(0, (width - len(title)) // 2, title)
         self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
@@ -610,9 +950,14 @@ class ThemeSwitcher:
             if category != last_category:
                 if row < end_row:
                     self.stdscr.attron(curses.color_pair(4) | curses.A_BOLD)
-                    # Add extra space after category name and pad to full width for alignment
-                    category_text = f" {category} ".ljust(width - 2)
+                    # Draw category text
+                    category_text = f" {category} "
                     self.stdscr.addstr(row, col, category_text)
+                    # Fill rest of line with spaces up to the separator
+                    current_y, current_x = self.stdscr.getyx()
+                    spaces_needed = col + width - current_x
+                    if spaces_needed > 0:
+                        self.stdscr.addstr(" " * spaces_needed)
                     self.stdscr.attroff(curses.color_pair(4) | curses.A_BOLD)
                     row += 1
                     last_category = category
@@ -630,10 +975,19 @@ class ThemeSwitcher:
                 self.stdscr.attron(curses.color_pair(3))
 
             theme_text = f"{prefix}{theme.name}"
-            if len(theme_text) > width - 2:
-                theme_text = theme_text[:width-5] + "..."
 
-            self.stdscr.addstr(row, col, theme_text.ljust(width - 2))
+            # Draw theme text
+            self.stdscr.addstr(row, col, theme_text)
+
+            # Fill rest of line with spaces up to the separator
+            current_y, current_x = self.stdscr.getyx()
+            spaces_needed = col + width - current_x
+            if spaces_needed > 0:
+                self.stdscr.addstr(" " * spaces_needed)
+            elif spaces_needed < 0:
+                # Text is too long, need to truncate
+                # Move back and overwrite with "..."
+                self.stdscr.addstr(row, col + width - 3, "...")
 
             if is_selected:
                 self.stdscr.attroff(curses.color_pair(6) | curses.A_BOLD)
@@ -649,10 +1003,31 @@ class ThemeSwitcher:
 
         row = start_row
 
+        # Get the category color for this theme
+        if theme.category == "green":
+            category_color = 1
+        elif theme.category == "blue":
+            category_color = 2
+        elif theme.category in ("purple", "pink"):
+            category_color = 5
+        elif theme.category == "orange":
+            category_color = 4
+        elif theme.category == "cyan":
+            category_color = 2
+        elif theme.category == "light":
+            category_color = 3
+        else:
+            category_color = 1
+
         # Theme name and description
-        self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
-        self.stdscr.addstr(row, col, f"📦 {theme.name}")
-        self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+        self.stdscr.attron(curses.color_pair(category_color) | curses.A_BOLD)
+        self.stdscr.addstr(row, col, f"[THEME] {theme.name}")
+        self.stdscr.attroff(curses.color_pair(category_color) | curses.A_BOLD)
+
+        # Category indicator
+        self.stdscr.attron(curses.color_pair(3))
+        self.stdscr.addstr(f" ({theme.category.upper()})")
+        self.stdscr.attroff(curses.color_pair(3))
         row += 1
 
         self.stdscr.attron(curses.color_pair(3))
@@ -663,19 +1038,78 @@ class ThemeSwitcher:
         self.stdscr.attroff(curses.color_pair(3))
         row += 2
 
-        # Color swatches
+        # Color swatches with visual blocks
         self.stdscr.attron(curses.color_pair(5) | curses.A_BOLD)
-        self.stdscr.addstr(row, col, "🎨 Color Palette:")
+        self.stdscr.addstr(row, col, "[COLORS] Color Palette:")
         self.stdscr.attroff(curses.color_pair(5) | curses.A_BOLD)
         row += 1
 
+        # Show color swatches with colored blocks
         for name, hex_color in theme.color_swatches.items():
             if row >= end_row - 15:
                 break
-            swatch = f"  ■ {name:12} {hex_color}"
-            self.stdscr.attron(curses.color_pair(3))
-            self.stdscr.addstr(row, col, swatch)
-            self.stdscr.attroff(curses.color_pair(3))
+
+            # Draw color block (█) with approximate color
+            color_block = "███"
+
+            # Try to use dynamic colors if available, otherwise use static
+            try:
+                # Get RGB values
+                r, g, b = hex_to_rgb(hex_color)
+
+                # Calculate relative intensities
+                total = r + g + b
+                if total == 0:
+                    # Pure black
+                    block_color = 3  # White text on black bg
+                    use_dim = True
+                else:
+                    # Normalize to find dominant color
+                    r_norm = r / total
+                    g_norm = g / total
+                    b_norm = b / total
+
+                    # Determine dominant color channel
+                    max_channel = max(r, g, b)
+                    use_dim = max_channel < 128  # Dim for dark colors
+
+                    # Color selection based on dominant channels
+                    if r_norm > 0.4 and g_norm > 0.4 and b_norm < 0.25:
+                        block_color = 4  # Yellow (red + green)
+                    elif r_norm > 0.4 and b_norm > 0.35:
+                        block_color = 5  # Magenta (red + blue)
+                    elif g_norm > 0.4 and b_norm > 0.35:
+                        block_color = 2  # Cyan (green + blue)
+                    elif r_norm > 0.45:
+                        # Reddish - use green as closest bright color
+                        block_color = 1  # Green (curses doesn't have bright red)
+                    elif g_norm > 0.4:
+                        block_color = 1  # Green
+                    elif b_norm > 0.4:
+                        block_color = 2  # Blue/Cyan
+                    elif r_norm > 0.3 and g_norm > 0.3 and b_norm > 0.3:
+                        # Balanced RGB = grey/white
+                        block_color = 3  # White
+                    else:
+                        block_color = 3  # Default
+
+                attr = curses.color_pair(block_color) | curses.A_BOLD
+                if use_dim and name.upper() in ['BG', 'BORDER']:
+                    attr = curses.color_pair(block_color) | curses.A_DIM
+
+                self.stdscr.attron(attr)
+                self.stdscr.addstr(row, col, f"  {color_block}")
+                self.stdscr.attroff(attr)
+
+                self.stdscr.attron(curses.color_pair(3))
+                self.stdscr.addstr(f" {name:12} {hex_color}")
+                self.stdscr.attroff(curses.color_pair(3))
+            except Exception as e:
+                # Fallback to plain text
+                self.stdscr.attron(curses.color_pair(3))
+                self.stdscr.addstr(row, col, f"  {color_block} {name:12} {hex_color}")
+                self.stdscr.attroff(curses.color_pair(3))
+
             row += 1
 
         row += 1
@@ -683,7 +1117,7 @@ class ThemeSwitcher:
         # Mock tmux status bar with theme colors
         if row + 5 < end_row:
             self.stdscr.attron(curses.color_pair(5) | curses.A_BOLD)
-            self.stdscr.addstr(row, col, "📊 Tmux Status Bar Preview:")
+            self.stdscr.addstr(row, col, "[PREVIEW] Tmux Status Bar Preview:")
             self.stdscr.attroff(curses.color_pair(5) | curses.A_BOLD)
             row += 1
 
@@ -717,20 +1151,20 @@ class ThemeSwitcher:
             self.stdscr.addstr(row, col, "│")
             self.stdscr.attroff(curses.color_pair(3))
 
-            # Session in accent color
-            self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+            # Session in accent color (use theme category color)
+            self.stdscr.attron(curses.color_pair(category_color) | curses.A_BOLD)
             self.stdscr.addstr(status_left)
-            self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+            self.stdscr.attroff(curses.color_pair(category_color) | curses.A_BOLD)
 
             # Regular window
             self.stdscr.attron(curses.color_pair(3))
             self.stdscr.addstr(status_middle)
             self.stdscr.attroff(curses.color_pair(3))
 
-            # Active window indicator (highlighted)
-            self.stdscr.attron(curses.color_pair(2) | curses.A_BOLD | curses.A_REVERSE)
+            # Active window indicator (highlighted, also use category color)
+            self.stdscr.attron(curses.color_pair(category_color) | curses.A_BOLD | curses.A_REVERSE)
             self.stdscr.addstr(status_active)
-            self.stdscr.attroff(curses.color_pair(2) | curses.A_BOLD | curses.A_REVERSE)
+            self.stdscr.attroff(curses.color_pair(category_color) | curses.A_BOLD | curses.A_REVERSE)
 
             # More windows
             self.stdscr.attron(curses.color_pair(3))
@@ -749,23 +1183,23 @@ class ThemeSwitcher:
             self.stdscr.attroff(curses.color_pair(3))
             row += 1
 
-            # Add color legend
+            # Add color legend (use theme category color)
             self.stdscr.attron(curses.color_pair(3))
             legend = "  (Colors: "
             self.stdscr.addstr(row, col, legend)
             self.stdscr.attroff(curses.color_pair(3))
 
-            self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+            self.stdscr.attron(curses.color_pair(category_color) | curses.A_BOLD)
             self.stdscr.addstr("accent")
-            self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+            self.stdscr.attroff(curses.color_pair(category_color) | curses.A_BOLD)
 
             self.stdscr.attron(curses.color_pair(3))
             self.stdscr.addstr(", ")
             self.stdscr.attroff(curses.color_pair(3))
 
-            self.stdscr.attron(curses.color_pair(2) | curses.A_REVERSE)
+            self.stdscr.attron(curses.color_pair(category_color) | curses.A_REVERSE)
             self.stdscr.addstr("active")
-            self.stdscr.attroff(curses.color_pair(2) | curses.A_REVERSE)
+            self.stdscr.attroff(curses.color_pair(category_color) | curses.A_REVERSE)
 
             self.stdscr.attron(curses.color_pair(3))
             self.stdscr.addstr(")")
@@ -775,7 +1209,7 @@ class ThemeSwitcher:
         # Directory listing preview (eza -l -T --level 2 style)
         if row + 10 < end_row:
             self.stdscr.attron(curses.color_pair(5) | curses.A_BOLD)
-            self.stdscr.addstr(row, col, "📁 Directory Listing (eza -l -T --level 2):")
+            self.stdscr.addstr(row, col, "[FILES] Directory Listing (eza -l -T --level 2):")
             self.stdscr.attroff(curses.color_pair(5) | curses.A_BOLD)
             row += 1
 
@@ -806,15 +1240,16 @@ class ThemeSwitcher:
                     self.stdscr.attroff(curses.color_pair(3))
 
                     # Color the name based on whether it's a directory
+                    # Use color based on theme category (reuse category_color from above)
                     if is_dir:
-                        self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+                        self.stdscr.attron(curses.color_pair(category_color) | curses.A_BOLD)
                     else:
                         self.stdscr.attron(curses.color_pair(3))
 
                     self.stdscr.addstr(name + suffix)
 
                     if is_dir:
-                        self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+                        self.stdscr.attroff(curses.color_pair(category_color) | curses.A_BOLD)
                     else:
                         self.stdscr.attroff(curses.color_pair(3))
                 else:
@@ -825,14 +1260,15 @@ class ThemeSwitcher:
                     self.stdscr.attroff(curses.color_pair(3))
 
                     if is_dir:
-                        self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+                        # Use color based on theme category (reuse category_color)
+                        self.stdscr.attron(curses.color_pair(category_color) | curses.A_BOLD)
                     else:
                         self.stdscr.attron(curses.color_pair(3))
 
                     self.stdscr.addstr(name + suffix)
 
                     if is_dir:
-                        self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+                        self.stdscr.attroff(curses.color_pair(category_color) | curses.A_BOLD)
                     else:
                         self.stdscr.attroff(curses.color_pair(3))
 
@@ -845,9 +1281,9 @@ class ThemeSwitcher:
                 self.stdscr.addstr(row, col, note)
                 self.stdscr.attroff(curses.color_pair(3))
 
-                self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
+                self.stdscr.attron(curses.color_pair(category_color) | curses.A_BOLD)
                 self.stdscr.addstr("theme color")
-                self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
+                self.stdscr.attroff(curses.color_pair(category_color) | curses.A_BOLD)
 
                 self.stdscr.attron(curses.color_pair(3))
                 self.stdscr.addstr(")")
@@ -976,7 +1412,7 @@ class ThemeSwitcher:
                 self.stdscr.addstr(start_row + i, start_col, " " * dialog_width)
 
             self.stdscr.attron(curses.color_pair(1) | curses.A_BOLD)
-            success = "✓ Theme Applied Successfully!"
+            success = "[OK] Theme Applied Successfully!"
             self.stdscr.addstr(start_row + 4, start_col + (dialog_width - len(success)) // 2, success)
             self.stdscr.attroff(curses.color_pair(1) | curses.A_BOLD)
 
@@ -994,7 +1430,7 @@ class ThemeSwitcher:
                 self.stdscr.addstr(start_row + i, start_col, " " * dialog_width)
 
             self.stdscr.attron(curses.color_pair(1))
-            error = "✗ Error Applying Theme"
+            error = "[ERROR] Error Applying Theme"
             self.stdscr.addstr(start_row + 4, start_col + (dialog_width - len(error)) // 2, error)
             self.stdscr.attroff(curses.color_pair(1))
 

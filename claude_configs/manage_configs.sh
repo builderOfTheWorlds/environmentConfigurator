@@ -174,6 +174,23 @@ git_commit() {
     print_info "To push: cd $PROJECT_DIR && git push"
 }
 
+backup_tmux() {
+    print_header
+    print_info "Running tmux session backup..."
+    echo ""
+
+    "$PROJECT_DIR/bin/backup-tmux-sessions"
+
+    if [ $? -eq 0 ]; then
+        echo ""
+        print_info "Backup saved to: $PROJECT_DIR/backups/tmux-sessions/"
+        print_info "These files are git-tracked with your environment configs"
+    else
+        print_error "Backup failed"
+        return 1
+    fi
+}
+
 show_help() {
     print_header
     echo ""
@@ -187,11 +204,13 @@ show_help() {
     echo "  setup           Create/recreate all symlinks"
     echo "  git-status      Show git status of configs"
     echo "  git-commit      Commit config changes to git"
+    echo "  backup-tmux     Backup tmux session files"
     echo "  help            Show this help message"
     echo ""
     echo "Examples:"
     echo "  $0 status                    # Check current config setup"
     echo "  $0 edit-claude               # Edit custom instructions"
+    echo "  $0 backup-tmux               # Backup tmux sessions"
     echo "  $0 git-commit                # Commit and sync changes"
 }
 
@@ -217,6 +236,9 @@ case "${1:-status}" in
         ;;
     git-commit)
         git_commit
+        ;;
+    backup-tmux)
+        backup_tmux
         ;;
     help|--help|-h)
         show_help
