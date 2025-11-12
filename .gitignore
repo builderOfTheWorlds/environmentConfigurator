@@ -35,5 +35,6 @@ secrets/
 # Local machine-specific configs
 local/
 
-/bin/
+/data/
 
+/backups/tmux-sessions/last
