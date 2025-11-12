@@ -8,21 +8,21 @@
 
 **Updating Configs:**
 - **ALWAYS edit configs in the project directory** (not `~/.claude/`)
-- Use management script: `/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/bin/claude-config`
+- Use management script: `/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/data/ai/claude-config`
 - Configs are git-tracked in environmentConfigurator project for version control
 
 **Management Commands:**
 ```bash
 # From anywhere in the project:
-./bin/claude-config status          # Check config status
-./bin/claude-config edit-claude     # Edit this file (CLAUDE.md)
-./bin/claude-config edit-analysis   # Edit analysis script
-./bin/claude-config git-commit      # Commit config changes
+./data/ai/claude-config status          # Check config status
+./data/ai/claude-config edit-claude     # Edit this file (CLAUDE.md)
+./data/ai/claude-config edit-analysis   # Edit analysis script
+./data/ai/claude-config git-commit      # Commit config changes
 ```
 
 **When I update configs:**
 - Write to project directory: `/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/claude_configs/`
-- Remind user to commit: `./bin/claude-config git-commit`
+- Remind user to commit: `./data/ai/claude-config git-commit`
 - Changes will sync via git
 
 ---

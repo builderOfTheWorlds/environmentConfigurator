@@ -58,34 +58,34 @@ This allows:
 
 ## Management Script
 
-**Location:** `./bin/claude-config` (symlink to `claude_configs/manage_configs.sh`)
+**Location:** `./data/ai/claude-config` (symlink to `claude_configs/manage_configs.sh`)
 
 ### Commands
 
 ```bash
 # Check current status
-./bin/claude-config status
+./data/ai/claude-config status
 
 # Edit custom instructions (CLAUDE.md)
-./bin/claude-config edit-claude
+./data/ai/claude-config edit-claude
 
 # Edit analysis script
-./bin/claude-config edit-analysis
+./data/ai/claude-config edit-analysis
 
 # Verify all symlinks are working
-./bin/claude-config verify
+./data/ai/claude-config verify
 
 # Recreate all symlinks
-./bin/claude-config setup
+./data/ai/claude-config setup
 
 # Check git status of configs
-./bin/claude-config git-status
+./data/ai/claude-config git-status
 
 # Commit config changes
-./bin/claude-config git-commit
+./data/ai/claude-config git-commit
 
 # Show help
-./bin/claude-config help
+./data/ai/claude-config help
 ```
 
 ## Configuration Files
@@ -105,9 +105,9 @@ This allows:
 
 **Updating:**
 ```bash
-./bin/claude-config edit-claude
+./data/ai/claude-config edit-claude
 # Make changes
-./bin/claude-config git-commit
+./data/ai/claude-config git-commit
 ```
 
 ### Analysis Scripts
@@ -133,19 +133,19 @@ Cron wrapper that:
 
 1. **Edit configs** (always in project directory):
    ```bash
-   ./bin/claude-config edit-claude
+   ./data/ai/claude-config edit-claude
    # or edit directly
    nano claude_configs/CLAUDE.md
    ```
 
 2. **Check what changed**:
    ```bash
-   ./bin/claude-config git-status
+   ./data/ai/claude-config git-status
    ```
 
 3. **Commit changes**:
    ```bash
-   ./bin/claude-config git-commit
+   ./data/ai/claude-config git-commit
    # Enter commit message
    ```
 
@@ -164,7 +164,7 @@ Cron wrapper that:
 
 2. **Run setup script**:
    ```bash
-   ./bin/claude-config setup
+   ./data/ai/claude-config setup
    ```
 
 This will:
@@ -174,8 +174,8 @@ This will:
 
 3. **Verify**:
    ```bash
-   ./bin/claude-config verify
-   ./bin/claude-config status
+   ./data/ai/claude-config verify
+   ./data/ai/claude-config status
    ```
 
 ## Manual Analysis
@@ -199,7 +199,7 @@ cat /mnt/c/Users/matt/PycharmProjects/environmentConfigurator/claude_configs/log
 ### DO NOT Edit Files in ~/.claude/
 
 Files in `~/.claude/` are **symlinks**. While editing them will work (changes go to project), it's better to:
-- Use `./bin/claude-config edit-claude` for guided editing
+- Use `./data/ai/claude-config edit-claude` for guided editing
 - Edit files directly in `claude_configs/` directory
 - Ensures you're aware these are version-controlled
 
@@ -226,8 +226,8 @@ echo "0 5 * * * /home/matt/.claude/run_analysis_if_inactive.sh" | crontab -
 ### Symlinks broken?
 
 ```bash
-./bin/claude-config verify
-./bin/claude-config setup
+./data/ai/claude-config verify
+./data/ai/claude-config setup
 ```
 
 ### Analysis not running?

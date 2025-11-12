@@ -58,34 +58,34 @@ This allows:
 
 ## Management Script
 
-**Location:** `./bin/gemini-config` (symlink to `gemini_configs/manage_configs.sh`)
+**Location:** `./data/ai/gemini-config` (symlink to `gemini_configs/manage_configs.sh`)
 
 ### Commands
 
 ```bash
 # Check current status
-./bin/gemini-config status
+./data/ai/gemini-config status
 
 # Edit custom instructions (INSTRUCTIONS.md)
-./bin/gemini-config edit-instructions
+./data/ai/gemini-config edit-instructions
 
 # Edit analysis script
-./bin/gemini-config edit-analysis
+./data/ai/gemini-config edit-analysis
 
 # Verify all symlinks are working
-./bin/gemini-config verify
+./data/ai/gemini-config verify
 
 # Recreate all symlinks
-./bin/gemini-config setup
+./data/ai/gemini-config setup
 
 # Check git status of configs
-./bin/gemini-config git-status
+./data/ai/gemini-config git-status
 
 # Commit config changes
-./bin/gemini-config git-commit
+./data/ai/gemini-config git-commit
 
 # Show help
-./bin/gemini-config help
+./data/ai/gemini-config help
 ```
 
 ## Configuration Files
@@ -105,9 +105,9 @@ This allows:
 
 **Updating:**
 ```bash
-./bin/gemini-config edit-instructions
+./data/ai/gemini-config edit-instructions
 # Make changes
-./bin/gemini-config git-commit
+./data/ai/gemini-config git-commit
 ```
 
 ### Analysis Scripts
@@ -133,19 +133,19 @@ Cron wrapper that:
 
 1. **Edit configs** (always in project directory):
    ```bash
-   ./bin/gemini-config edit-instructions
+   ./data/ai/gemini-config edit-instructions
    # or edit directly
    nano gemini_configs/INSTRUCTIONS.md
    ```
 
 2. **Check what changed**:
    ```bash
-   ./bin/gemini-config git-status
+   ./data/ai/gemini-config git-status
    ```
 
 3. **Commit changes**:
    ```bash
-   ./bin/gemini-config git-commit
+   ./data/ai/gemini-config git-commit
    # Enter commit message
    ```
 
@@ -164,7 +164,7 @@ Cron wrapper that:
 
 2. **Run setup script**:
    ```bash
-   ./bin/gemini-config setup
+   ./data/ai/gemini-config setup
    ```
 
 This will:
@@ -174,8 +174,8 @@ This will:
 
 3. **Verify**:
    ```bash
-   ./bin/gemini-config verify
-   ./bin/gemini-config status
+   ./data/ai/gemini-config verify
+   ./data/ai/gemini-config status
    ```
 
 ## Manual Analysis
@@ -199,7 +199,7 @@ cat /mnt/c/Users/matt/PycharmProjects/environmentConfigurator/gemini_configs/log
 ### DO NOT Edit Files in ~/.gemini/
 
 Files in `~/.gemini/` are **symlinks**. While editing them will work (changes go to project), it's better to:
-- Use `./bin/gemini-config edit-instructions` for guided editing
+- Use `./data/ai/gemini-config edit-instructions` for guided editing
 - Edit files directly in `gemini_configs/` directory
 - Ensures you're aware these are version-controlled
 
@@ -226,8 +226,8 @@ echo "0 5 * * * /home/matt/.gemini/run_analysis_if_inactive.sh" | crontab -
 ### Symlinks broken?
 
 ```bash
-./bin/gemini-config verify
-./bin/gemini-config setup
+./data/ai/gemini-config verify
+./data/ai/gemini-config setup
 ```
 
 ### Analysis not running?

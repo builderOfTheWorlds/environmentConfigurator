@@ -1,8 +1,0 @@
-pane	0	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects/ifmAiAnalyzer/ifmAnalyzerManager	1	sudo	:sudo su
-pane	2	0	1	:*	0	D2000	:/home/matt	1	bash	:
-pane	5	0	1	:*	0	D2000	:/mnt/c/Users/matt/PycharmProjects	1	sudo	:sudo su
-pane	5	0	1	:*	1	D2000	:/mnt/c/Users/matt/PycharmProjects/ashiorid/ashiorid_ai_manager	0	sudo	:sudo su
-window	0	0	:sudo	1	:*	b57d,182x61,0,0,0	:
-window	2	0	:bash	1	:*	caff,120x29,0,0,2	:
-window	5	0	:sudo	1	:*	1e14,427x87,0,0{213x87,0,0,5,213x87,214,0,6}	:
-state	5	

@@ -268,6 +268,59 @@ UPDATESCRIPT
 fi
 print_status "Created update-env-config command"
 
+# Install Nerd Fonts
+install_nerd_fonts() {
+    echo ""
+    echo -e "${BLUE}=============================================="
+    echo "Nerd Font Installation"
+    echo "==============================================\n${NC}"
+
+    # Check if unzip is installed
+    if ! command -v unzip &> /dev/null; then
+        print_warning "unzip is not installed. Skipping font installation."
+        echo "Install unzip with: sudo apt install unzip (Ubuntu/Debian)"
+        return 1
+    fi
+
+    # Check if fontconfig is installed
+    if ! command -v fc-cache &> /dev/null; then
+        print_warning "fontconfig is not installed. Font cache will not be updated."
+        echo "Install fontconfig with: sudo apt install fontconfig (Ubuntu/Debian)"
+    fi
+
+    # Create fonts directory
+    FONTS_DIR="$HOME/.local/share/fonts"
+    if [ "$TEST_MODE" = false ]; then
+        mkdir -p "$FONTS_DIR/NerdFonts"
+    fi
+    print_status "Created fonts directory at $FONTS_DIR/NerdFonts"
+
+    # Install Ubuntu Nerd Font
+    FONT_ZIP="$INSTALL_DIR/fonts/Ubuntu.zip"
+    if [ -f "$FONT_ZIP" ] || [ "$TEST_MODE" = true ]; then
+        print_status "Installing Ubuntu Nerd Font..."
+        if [ "$TEST_MODE" = false ]; then
+            unzip -o "$FONT_ZIP" -d "$FONTS_DIR/NerdFonts" > /dev/null 2>&1
+        fi
+        print_status "Ubuntu Nerd Font installed"
+
+        # Update font cache
+        if command -v fc-cache &> /dev/null; then
+            if [ "$TEST_MODE" = false ]; then
+                fc-cache -f "$FONTS_DIR" > /dev/null 2>&1
+            fi
+            print_status "Font cache updated"
+        fi
+    else
+        print_warning "Font file not found at $FONT_ZIP"
+    fi
+
+    echo ""
+    echo -e "${GREEN}Nerd Fonts installation complete!${NC}"
+    echo "The Ubuntu Nerd Font is now available for use with Starship and other applications."
+    echo ""
+}
+
 # Install Oh-My-Zsh (optional)
 install_ohmyzsh() {
     echo ""
@@ -348,6 +401,9 @@ if [ "$TEST_MODE" = true ]; then
     echo -e "${YELLOW}No changes were made to your system.${NC}"
     echo "Run without --test flag to perform actual installation."
 else
+    # Run Nerd Font installation
+    install_nerd_fonts
+
     # Run Oh-My-Zsh installation
     install_ohmyzsh
 

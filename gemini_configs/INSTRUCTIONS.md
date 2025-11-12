@@ -8,21 +8,21 @@
 
 **Updating Configs:**
 - **ALWAYS edit configs in the project directory** (not `~/.gemini/`)
-- Use management script: `/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/bin/gemini-config`
+- Use management script: `/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/data/ai/gemini-config`
 - Configs are git-tracked in environmentConfigurator project for version control
 
 **Management Commands:**
 ```bash
 # From anywhere in the project:
-./bin/gemini-config status          # Check config status
-./bin/gemini-config edit-instructions # Edit this file (INSTRUCTIONS.md)
-./bin/gemini-config edit-analysis   # Edit analysis script
-./bin/gemini-config git-commit      # Commit config changes
+./data/ai/gemini-config status          # Check config status
+./data/ai/gemini-config edit-instructions # Edit this file (INSTRUCTIONS.md)
+./data/ai/gemini-config edit-analysis   # Edit analysis script
+./data/ai/gemini-config git-commit      # Commit config changes
 ```
 
 **When I update configs:**
 - Write to project directory: `/mnt/c/Users/matt/PycharmProjects/environmentConfigurator/gemini_configs/`
-- Remind user to commit: `./bin/gemini-config git-commit`
+- Remind user to commit: `./data/ai/gemini-config git-commit`
 - Changes will sync via git
 
 ---
