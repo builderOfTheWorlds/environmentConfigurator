@@ -1,0 +1,538 @@
+#!/bin/bash
+# Cron Job Management Script
+# Manages cron jobs for environment configuration and automation
+
+# Detect installation directory
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
+
+# Colors for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+CYAN='\033[0;36m'
+NC='\033[0m' # No Color
+
+print_header() {
+    echo -e "${BLUE}=====================================${NC}"
+    echo -e "${BLUE}  Cron Job Manager${NC}"
+    echo -e "${BLUE}=====================================${NC}"
+}
+
+print_success() {
+    echo -e "${GREEN}✓${NC} $1"
+}
+
+print_info() {
+    echo -e "${BLUE}ℹ${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}⚠${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}✗${NC} $1"
+}
+
+# Check if cron is available
+check_cron_available() {
+    if ! command -v crontab &> /dev/null; then
+        print_error "crontab command not found"
+        print_info "Cron may not be installed or available on this system"
+        return 1
+    fi
+    return 0
+}
+
+# List all current cron jobs
+list_jobs() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    print_info "Current cron jobs:"
+    echo ""
+
+    local jobs=$(crontab -l 2>/dev/null)
+
+    if [ -z "$jobs" ]; then
+        print_warning "No cron jobs configured"
+        echo ""
+        print_info "Use '$0 add-preset' to add common jobs"
+        return 0
+    fi
+
+    # Parse and display jobs with descriptions
+    local count=1
+    echo "$jobs" | while IFS= read -r line; do
+        # Skip empty lines
+        if [ -z "$line" ]; then
+            continue
+        fi
+
+        # Display comments as-is
+        if [[ "$line" =~ ^# ]]; then
+            echo -e "${CYAN}$line${NC}"
+            continue
+        fi
+
+        # Parse cron job
+        local schedule=$(echo "$line" | awk '{print $1, $2, $3, $4, $5}')
+        local command=$(echo "$line" | cut -d' ' -f6-)
+
+        echo -e "${GREEN}[$count]${NC} Schedule: ${YELLOW}$schedule${NC}"
+        echo "    Command:  $command"
+        echo ""
+
+        ((count++))
+    done
+
+    print_info "To edit: $0 edit"
+    print_info "To remove all: $0 clear"
+}
+
+# Show status with job descriptions
+show_status() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    print_info "Cron Job Status"
+    echo ""
+
+    local jobs=$(crontab -l 2>/dev/null)
+
+    # Check for known jobs
+    local has_analysis=false
+    local has_env_sync=false
+
+    if echo "$jobs" | grep -q "run_analysis_if_inactive.sh"; then
+        has_analysis=true
+        print_success "Daily Analysis Script: Configured"
+        local schedule=$(echo "$jobs" | grep "run_analysis_if_inactive.sh" | awk '{print $1, $2, $3, $4, $5}')
+        echo "          Schedule: $schedule"
+    else
+        print_warning "Daily Analysis Script: Not configured"
+    fi
+
+    if echo "$jobs" | grep -q "\.environment-config.*git pull"; then
+        has_env_sync=true
+        print_success "Environment Config Sync: Configured"
+        local schedule=$(echo "$jobs" | grep "\.environment-config.*git pull" | awk '{print $1, $2, $3, $4, $5}')
+        echo "          Schedule: $schedule"
+    else
+        print_warning "Environment Config Sync: Not configured"
+    fi
+
+    echo ""
+
+    # Count total jobs
+    local total=$(echo "$jobs" | grep -v '^#' | grep -v '^$' | wc -l)
+    print_info "Total cron jobs: $total"
+
+    if [ "$has_analysis" = false ] || [ "$has_env_sync" = false ]; then
+        echo ""
+        print_info "Missing jobs can be added with: $0 add-preset"
+    fi
+}
+
+# Add preset jobs
+add_preset() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    echo "Available Presets:"
+    echo ""
+    echo "1. Daily Analysis Script (5:00 AM)"
+    echo "   - Runs at 5:00 AM daily"
+    echo "   - Checks if inactive >1 hour"
+    echo "   - Analyzes Claude conversation history"
+    echo ""
+    echo "2. Environment Config Sync (Every 6 hours)"
+    echo "   - Syncs ~/.environment-config via git pull"
+    echo "   - Runs every 6 hours"
+    echo ""
+    echo "3. Both (Recommended)"
+    echo ""
+
+    read -p "Select preset [1-3, or q to quit]: " choice
+
+    case $choice in
+        1)
+            add_daily_analysis
+            ;;
+        2)
+            add_env_sync
+            ;;
+        3)
+            add_daily_analysis
+            add_env_sync
+            ;;
+        q|Q)
+            print_info "Cancelled"
+            return 0
+            ;;
+        *)
+            print_error "Invalid choice"
+            return 1
+            ;;
+    esac
+
+    echo ""
+    print_success "Preset jobs added"
+    print_info "Run '$0 list' to view all jobs"
+}
+
+# Add daily analysis script
+add_daily_analysis() {
+    local claude_home="${CLAUDE_HOME:-$HOME/.claude}"
+    local script_path="$claude_home/run_analysis_if_inactive.sh"
+
+    # Check if script exists
+    if [ ! -f "$script_path" ]; then
+        print_warning "Analysis script not found at: $script_path"
+        print_info "Make sure Claude configs are set up with: claude-config setup"
+    fi
+
+    # Check if already exists
+    if crontab -l 2>/dev/null | grep -q "run_analysis_if_inactive.sh"; then
+        print_warning "Daily analysis job already exists"
+        return 0
+    fi
+
+    # Add job
+    local cron_entry="0 5 * * * $script_path >> $claude_home/analysis_logs/cron.log 2>&1"
+    (crontab -l 2>/dev/null; echo "# Daily Claude conversation analysis"; echo "$cron_entry") | crontab -
+
+    print_success "Added daily analysis script (5:00 AM)"
+}
+
+# Add environment config sync
+add_env_sync() {
+    local install_dir="${INSTALL_DIR:-$HOME/.environment-config}"
+
+    # Check if directory exists
+    if [ ! -d "$install_dir" ]; then
+        print_warning "Environment config directory not found at: $install_dir"
+        print_info "Install with the main install.sh script first"
+    fi
+
+    # Check if already exists
+    if crontab -l 2>/dev/null | grep -q "$install_dir.*git pull"; then
+        print_warning "Environment sync job already exists"
+        return 0
+    fi
+
+    # Add job
+    local cron_entry="0 */6 * * * cd $install_dir && git pull origin main > /dev/null 2>&1"
+    (crontab -l 2>/dev/null; echo "# Environment config auto-update"; echo "$cron_entry") | crontab -
+
+    print_success "Added environment config sync (every 6 hours)"
+}
+
+# Add custom job
+add_custom() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    print_info "Add Custom Cron Job"
+    echo ""
+    echo "Cron schedule format: MIN HOUR DAY MONTH WEEKDAY"
+    echo "Examples:"
+    echo "  0 5 * * *     - Daily at 5:00 AM"
+    echo "  */30 * * * *  - Every 30 minutes"
+    echo "  0 */6 * * *   - Every 6 hours"
+    echo "  0 0 * * 0     - Weekly on Sunday at midnight"
+    echo ""
+
+    read -p "Schedule (e.g., '0 5 * * *'): " schedule
+    if [ -z "$schedule" ]; then
+        print_error "Schedule cannot be empty"
+        return 1
+    fi
+
+    read -p "Command to run: " command
+    if [ -z "$command" ]; then
+        print_error "Command cannot be empty"
+        return 1
+    fi
+
+    read -p "Description (optional): " description
+
+    # Add job
+    local cron_entry="$schedule $command"
+    if [ -n "$description" ]; then
+        (crontab -l 2>/dev/null; echo "# $description"; echo "$cron_entry") | crontab -
+    else
+        (crontab -l 2>/dev/null; echo "$cron_entry") | crontab -
+    fi
+
+    print_success "Custom job added"
+    echo ""
+    echo "Schedule: $schedule"
+    echo "Command:  $command"
+}
+
+# Remove specific job
+remove_job() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    local jobs=$(crontab -l 2>/dev/null | grep -v '^#' | grep -v '^$')
+
+    if [ -z "$jobs" ]; then
+        print_warning "No cron jobs to remove"
+        return 0
+    fi
+
+    print_info "Current jobs:"
+    echo ""
+
+    local count=1
+    echo "$jobs" | while IFS= read -r line; do
+        local schedule=$(echo "$line" | awk '{print $1, $2, $3, $4, $5}')
+        local command=$(echo "$line" | cut -d' ' -f6-)
+        echo -e "${GREEN}[$count]${NC} $schedule - $command"
+        ((count++))
+    done
+
+    echo ""
+    read -p "Enter job number to remove (or 'all' to clear all): " choice
+
+    if [ "$choice" = "all" ]; then
+        read -p "Are you sure you want to remove ALL cron jobs? (yes/no): " confirm
+        if [ "$confirm" = "yes" ]; then
+            crontab -r 2>/dev/null || true
+            print_success "All cron jobs removed"
+        else
+            print_info "Cancelled"
+        fi
+        return 0
+    fi
+
+    # Validate number
+    if ! [[ "$choice" =~ ^[0-9]+$ ]]; then
+        print_error "Invalid choice"
+        return 1
+    fi
+
+    # Remove specific job
+    local temp_cron=$(mktemp)
+    crontab -l 2>/dev/null > "$temp_cron"
+
+    # Remove the nth non-comment line
+    local line_num=$(grep -n '^[^#]' "$temp_cron" | sed -n "${choice}p" | cut -d: -f1)
+
+    if [ -z "$line_num" ]; then
+        print_error "Invalid job number"
+        rm "$temp_cron"
+        return 1
+    fi
+
+    sed -i "${line_num}d" "$temp_cron"
+    crontab "$temp_cron"
+    rm "$temp_cron"
+
+    print_success "Job removed"
+}
+
+# Edit crontab directly
+edit_crontab() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    print_info "Opening crontab for editing..."
+    print_warning "Be careful when editing directly!"
+    echo ""
+
+    crontab -e
+}
+
+# Clear all cron jobs
+clear_all() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    print_warning "This will remove ALL cron jobs"
+    read -p "Are you sure? (yes/no): " confirm
+
+    if [ "$confirm" = "yes" ]; then
+        crontab -r 2>/dev/null || true
+        print_success "All cron jobs cleared"
+    else
+        print_info "Cancelled"
+    fi
+}
+
+# Backup cron jobs
+backup_cron() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    local backup_dir="$HOME/.cron-backups"
+    mkdir -p "$backup_dir"
+
+    local backup_file="$backup_dir/crontab-$(date +%Y%m%d-%H%M%S).bak"
+
+    if crontab -l > "$backup_file" 2>/dev/null; then
+        print_success "Cron jobs backed up to:"
+        echo "          $backup_file"
+    else
+        print_warning "No cron jobs to backup"
+    fi
+}
+
+# Restore from backup
+restore_cron() {
+    print_header
+    echo ""
+
+    if ! check_cron_available; then
+        return 1
+    fi
+
+    local backup_dir="$HOME/.cron-backups"
+
+    if [ ! -d "$backup_dir" ]; then
+        print_error "No backups found at $backup_dir"
+        return 1
+    fi
+
+    print_info "Available backups:"
+    echo ""
+
+    local backups=($(ls -t "$backup_dir"/*.bak 2>/dev/null))
+
+    if [ ${#backups[@]} -eq 0 ]; then
+        print_error "No backup files found"
+        return 1
+    fi
+
+    local count=1
+    for backup in "${backups[@]}"; do
+        echo -e "${GREEN}[$count]${NC} $(basename "$backup")"
+        ((count++))
+    done
+
+    echo ""
+    read -p "Select backup to restore [1-${#backups[@]}]: " choice
+
+    if ! [[ "$choice" =~ ^[0-9]+$ ]] || [ "$choice" -lt 1 ] || [ "$choice" -gt ${#backups[@]} ]; then
+        print_error "Invalid choice"
+        return 1
+    fi
+
+    local selected_backup="${backups[$((choice-1))]}"
+
+    print_warning "This will replace your current crontab"
+    read -p "Continue? (yes/no): " confirm
+
+    if [ "$confirm" = "yes" ]; then
+        crontab "$selected_backup"
+        print_success "Crontab restored from: $(basename "$selected_backup")"
+    else
+        print_info "Cancelled"
+    fi
+}
+
+# Show help
+show_help() {
+    print_header
+    echo ""
+    echo "Usage: $0 [command]"
+    echo ""
+    echo "Commands:"
+    echo "  list            List all current cron jobs"
+    echo "  status          Show status of known jobs"
+    echo "  add-preset      Add preset jobs (analysis, sync, etc.)"
+    echo "  add-custom      Add a custom cron job"
+    echo "  remove          Remove a specific job"
+    echo "  edit            Edit crontab directly"
+    echo "  clear           Remove all cron jobs"
+    echo "  backup          Backup current cron jobs"
+    echo "  restore         Restore from a backup"
+    echo "  help            Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0 status           # Check status of known jobs"
+    echo "  $0 list             # List all cron jobs"
+    echo "  $0 add-preset       # Add recommended jobs"
+    echo "  $0 add-custom       # Add your own job"
+    echo "  $0 backup           # Backup before making changes"
+    echo ""
+    echo "Preset Jobs:"
+    echo "  - Daily Analysis Script (5:00 AM)"
+    echo "  - Environment Config Sync (Every 6 hours)"
+}
+
+# Main script logic
+case "${1:-status}" in
+    list|ls)
+        list_jobs
+        ;;
+    status)
+        show_status
+        ;;
+    add-preset|preset)
+        add_preset
+        ;;
+    add-custom|add)
+        add_custom
+        ;;
+    remove|rm)
+        remove_job
+        ;;
+    edit)
+        edit_crontab
+        ;;
+    clear)
+        clear_all
+        ;;
+    backup)
+        backup_cron
+        ;;
+    restore)
+        restore_cron
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    *)
+        print_error "Unknown command: $1"
+        echo ""
+        show_help
+        exit 1
+        ;;
+esac

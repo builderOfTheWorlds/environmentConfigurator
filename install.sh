@@ -252,8 +252,17 @@ fi
 # Setup auto-update via cron (optional)
 print_status "Setting up auto-update..."
 if [ "$TEST_MODE" = false ]; then
-    CRON_CMD="0 */6 * * * cd $INSTALL_DIR && git pull origin main > /dev/null 2>&1"
-    (crontab -l 2>/dev/null | grep -v "$INSTALL_DIR" ; echo "$CRON_CMD") | crontab -
+    # Use cron-manager if available, otherwise set up directly
+    if [ -f "$INSTALL_DIR/bin/cron-manager" ]; then
+        # Check if cron job already exists
+        if ! crontab -l 2>/dev/null | grep -q "$INSTALL_DIR.*git pull"; then
+            CRON_CMD="0 */6 * * * cd $INSTALL_DIR && git pull origin main > /dev/null 2>&1"
+            (crontab -l 2>/dev/null | grep -v "$INSTALL_DIR" ; echo "# Environment config auto-update"; echo "$CRON_CMD") | crontab - 2>/dev/null || print_warning "Could not set up cron job (cron may not be available)"
+        fi
+    else
+        CRON_CMD="0 */6 * * * cd $INSTALL_DIR && git pull origin main > /dev/null 2>&1"
+        (crontab -l 2>/dev/null | grep -v "$INSTALL_DIR" ; echo "$CRON_CMD") | crontab - 2>/dev/null || print_warning "Could not set up cron job (cron may not be available)"
+    fi
 fi
 print_status "Auto-update scheduled (every 6 hours)"
 
@@ -360,6 +369,7 @@ else
     echo "1. Restart your shell or run: source ~/.bashrc (or ~/.zshrc)"
     echo "2. Run 'update-env-config' anytime to pull latest changes"
     echo "3. Manage Zsh with: zsh-setup [status|themes|plugins|edit]"
+    echo "4. Manage cron jobs with: cron-manager [status|list|add-preset]"
     echo ""
     if [ -d "$BACKUP_DIR" ]; then
         echo "Your old configuration files are backed up in:"
